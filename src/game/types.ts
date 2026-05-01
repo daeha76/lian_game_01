@@ -4,6 +4,9 @@ export type SpreadColor = "pink" | "orange";
 export type StepType =
   | "talk"
   | "ingredients"
+  | "crack_egg"
+  | "whisk"
+  | "pour"
   | "knead"
   | "roll"
   | "appliance_in"
@@ -25,6 +28,14 @@ export interface TalkStep extends BaseStep { type: "talk"; }
 export interface IngredientsStep extends BaseStep {
   type: "ingredients";
   items: { emoji: string; label: string }[];
+}
+export interface CrackEggStep extends BaseStep { type: "crack_egg"; taps: number; }
+export interface WhiskStep extends BaseStep { type: "whisk"; target: number; }
+export interface PourStep extends BaseStep {
+  type: "pour";
+  emoji: string;
+  label: string;
+  taps: number;
 }
 export interface KneadStep extends BaseStep { type: "knead"; target: number; }
 export interface RollStep extends BaseStep { type: "roll"; target: number; }
@@ -57,6 +68,9 @@ export interface FinaleStep extends BaseStep { type: "finale"; }
 export type Step =
   | TalkStep
   | IngredientsStep
+  | CrackEggStep
+  | WhiskStep
+  | PourStep
   | KneadStep
   | RollStep
   | ApplianceInStep

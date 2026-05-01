@@ -7,6 +7,9 @@ import styles from "./Game.module.css";
 
 import TalkStep from "./steps/TalkStep";
 import IngredientsStep from "./steps/IngredientsStep";
+import CrackEggStep from "./steps/CrackEggStep";
+import WhiskStep from "./steps/WhiskStep";
+import PourStep from "./steps/PourStep";
 import DoughStep from "./steps/DoughStep";
 import ApplianceInStep from "./steps/ApplianceInStep";
 import ApplianceRunStep from "./steps/ApplianceRunStep";
@@ -130,6 +133,9 @@ function StepRenderer({
   switch (step.type) {
     case "talk":             return <TalkStep             key={key} step={step} {...props} />;
     case "ingredients":      return <IngredientsStep      key={key} step={step} {...props} />;
+    case "crack_egg":        return <CrackEggStep         key={key} step={step} {...props} />;
+    case "whisk":            return <WhiskStep            key={key} step={step} {...props} />;
+    case "pour":             return <PourStep             key={key} step={step} {...props} />;
     case "knead":
     case "roll":             return <DoughStep            key={key} step={step} {...props} />;
     case "appliance_in":     return <ApplianceInStep      key={key} step={step} {...props} />;
