@@ -36,8 +36,15 @@ const PALETTES: Record<SpreadColor, ColorPalette> = {
     middle: "rgba(235, 185, 20, 0.78)",
     outer:  "rgba(200, 150, 0, 0)",
     shine:  "rgba(255, 255, 200, 0.55)",
-    // 노랑: R·G 모두 높고 B 낮음, R-G < 70 (오렌지와 구분)
     detect: (r, g, b) => r > 200 && g > 150 && b < 85 && (r - g) < 75,
+  },
+  green: {
+    inner:  "rgba(80, 210, 110, 0.88)",
+    middle: "rgba(40, 170, 75, 0.78)",
+    outer:  "rgba(10, 130, 50, 0)",
+    shine:  "rgba(200, 255, 220, 0.55)",
+    // 초록: G 높음, R 낮음 — 빵 베이지(R≥G)와 명확히 구분
+    detect: (r, g, b) => g > 155 && r < 155 && b < 130,
   },
 };
 
