@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { StepProps, TakeOutStep as TS } from "../types";
 import styles from "./steps.module.css";
 
-export default function TakeOutStep({ onComplete }: StepProps<TS>) {
+export default function TakeOutStep({ recipe, onComplete }: StepProps<TS>) {
   const [taking, setTaking] = useState(false);
 
   return (
@@ -17,7 +17,7 @@ export default function TakeOutStep({ onComplete }: StepProps<TS>) {
         setTimeout(onComplete, 500);
       }}
     >
-      🥖
+      {recipe.cookedEmoji}
     </div>
   );
 }

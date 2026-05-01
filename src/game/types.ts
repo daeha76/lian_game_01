@@ -1,13 +1,16 @@
+export type Appliance = "stove" | "air_fryer";
+export type SpreadColor = "pink" | "orange";
+
 export type StepType =
   | "talk"
   | "ingredients"
   | "knead"
   | "roll"
-  | "stove_in"
-  | "cook"
-  | "lid_open"
+  | "appliance_in"
+  | "appliance_run"
+  | "appliance_open"
   | "take_out"
-  | "jam"
+  | "spread"
   | "eat"
   | "finale";
 
@@ -25,11 +28,29 @@ export interface IngredientsStep extends BaseStep {
 }
 export interface KneadStep extends BaseStep { type: "knead"; target: number; }
 export interface RollStep extends BaseStep { type: "roll"; target: number; }
-export interface StoveInStep extends BaseStep { type: "stove_in"; }
-export interface CookStep extends BaseStep { type: "cook"; duration: number; }
-export interface LidOpenStep extends BaseStep { type: "lid_open"; }
+
+export interface ApplianceInStep extends BaseStep {
+  type: "appliance_in";
+  appliance: Appliance;
+}
+export interface ApplianceRunStep extends BaseStep {
+  type: "appliance_run";
+  appliance: Appliance;
+  duration: number;
+}
+export interface ApplianceOpenStep extends BaseStep {
+  type: "appliance_open";
+  appliance: Appliance;
+}
+
 export interface TakeOutStep extends BaseStep { type: "take_out"; }
-export interface JamStep extends BaseStep { type: "jam"; target: number; }
+
+export interface SpreadStep extends BaseStep {
+  type: "spread";
+  color: SpreadColor;
+  target: number;
+}
+
 export interface EatStep extends BaseStep { type: "eat"; bites: number; }
 export interface FinaleStep extends BaseStep { type: "finale"; }
 
@@ -38,11 +59,11 @@ export type Step =
   | IngredientsStep
   | KneadStep
   | RollStep
-  | StoveInStep
-  | CookStep
-  | LidOpenStep
+  | ApplianceInStep
+  | ApplianceRunStep
+  | ApplianceOpenStep
   | TakeOutStep
-  | JamStep
+  | SpreadStep
   | EatStep
   | FinaleStep;
 
@@ -50,6 +71,12 @@ export interface Recipe {
   id: string;
   name: string;
   finalImage: string;
+  /** 안 구운 모양 (반죽 단계 후 가전에 들어가는 음식) */
+  rawEmoji: string;
+  /** 구운 후 모양 (꺼내기, 먹이기 단계) */
+  cookedEmoji: string;
+  /** 먹이기 단계에서 빵 위에 입히는 잼/크림 색 (없으면 pink) */
+  spreadColor?: SpreadColor;
   steps: Step[];
 }
 

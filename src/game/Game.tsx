@@ -2,17 +2,17 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { Recipe, Step } from "./types";
-import { pickRandomRecipe } from "./recipes";
+import { RECIPES } from "./recipes";
 import styles from "./Game.module.css";
 
 import TalkStep from "./steps/TalkStep";
 import IngredientsStep from "./steps/IngredientsStep";
 import DoughStep from "./steps/DoughStep";
-import StoveInStep from "./steps/StoveInStep";
-import CookStep from "./steps/CookStep";
-import LidOpenStep from "./steps/LidOpenStep";
+import ApplianceInStep from "./steps/ApplianceInStep";
+import ApplianceRunStep from "./steps/ApplianceRunStep";
+import ApplianceOpenStep from "./steps/ApplianceOpenStep";
 import TakeOutStep from "./steps/TakeOutStep";
-import JamStep from "./steps/JamStep";
+import SpreadStep from "./steps/SpreadStep";
 import EatStep from "./steps/EatStep";
 import FinaleStep from "./steps/FinaleStep";
 
@@ -21,15 +21,12 @@ export default function Game() {
   const [stepIndex, setStepIndex] = useState(0);
   const [message, setMessage] = useState("오늘은 무엇을 만들까?");
 
-  // Strict Mode에서 state updater가 두 번 실행되는 것을 피하기 위해
-  // 현재 상태는 ref로 읽고, setState는 명시적 단일 호출로 진행
   const stateRef = useRef({ recipe, stepIndex });
   useEffect(() => {
     stateRef.current = { recipe, stepIndex };
   });
 
-  const start = useCallback(() => {
-    const r = pickRandomRecipe();
+  const start = useCallback((r: Recipe) => {
     setRecipe(r);
     setStepIndex(0);
     setMessage(r.steps[0].message);
@@ -60,8 +57,7 @@ export default function Game() {
   const isLastStep = recipe != null && stepIndex === recipe.steps.length - 1;
 
   function handleButton() {
-    if (showStart) start();
-    else if (isLastStep) goToStart();
+    if (isLastStep) goToStart();
     else next();
   }
 
@@ -73,7 +69,9 @@ export default function Game() {
           <p className={styles.message}>{message}</p>
         </div>
         <div className={styles.playArea}>
-          {currentStep && recipe && (
+          {showStart ? (
+            <RecipeMenu onPick={start} />
+          ) : currentStep && recipe ? (
             <StepRenderer
               step={currentStep}
               recipe={recipe}
@@ -81,17 +79,34 @@ export default function Game() {
               onComplete={next}
               setMessage={setMessage}
             />
-          )}
+          ) : null}
         </div>
-        {(showStart || stepBtn) && (
+        {!showStart && stepBtn && (
           <button className={styles.bigBtn} onClick={handleButton}>
-            {showStart ? "시작!" : stepBtn}
+            {stepBtn}
           </button>
         )}
       </main>
       <div className={styles.progress}>
         <div className={styles.progressFill} style={{ width: `${percent}%` }} />
       </div>
+    </div>
+  );
+}
+
+function RecipeMenu({ onPick }: { onPick: (r: Recipe) => void }) {
+  return (
+    <div className={styles.recipeMenu}>
+      {RECIPES.map((r) => (
+        <button
+          key={r.id}
+          className={`${styles.recipeCard} ${styles[`card_${r.spreadColor ?? "pink"}`]}`}
+          onClick={() => onPick(r)}
+        >
+          <span className={styles.cardEmoji}>{r.cookedEmoji}</span>
+          <span className={styles.cardName}>{r.name}</span>
+        </button>
+      ))}
     </div>
   );
 }
@@ -109,21 +124,20 @@ function StepRenderer({
   onComplete: () => void;
   setMessage: (m: string) => void;
 }) {
-  // key로 step 위치를 고정 — 같은 type이 연속해도 새 인스턴스로 마운트
   const key = `${recipe.id}-${stepIndex}-${step.type}`;
   const props = { onComplete, setMessage, recipe };
 
   switch (step.type) {
-    case "talk":        return <TalkStep        key={key} step={step} {...props} />;
-    case "ingredients": return <IngredientsStep key={key} step={step} {...props} />;
+    case "talk":             return <TalkStep             key={key} step={step} {...props} />;
+    case "ingredients":      return <IngredientsStep      key={key} step={step} {...props} />;
     case "knead":
-    case "roll":        return <DoughStep       key={key} step={step} {...props} />;
-    case "stove_in":    return <StoveInStep     key={key} step={step} {...props} />;
-    case "cook":        return <CookStep        key={key} step={step} {...props} />;
-    case "lid_open":    return <LidOpenStep     key={key} step={step} {...props} />;
-    case "take_out":    return <TakeOutStep     key={key} step={step} {...props} />;
-    case "jam":         return <JamStep         key={key} step={step} {...props} />;
-    case "eat":         return <EatStep         key={key} step={step} {...props} />;
-    case "finale":      return <FinaleStep      key={key} step={step} {...props} />;
+    case "roll":             return <DoughStep            key={key} step={step} {...props} />;
+    case "appliance_in":     return <ApplianceInStep      key={key} step={step} {...props} />;
+    case "appliance_run":    return <ApplianceRunStep     key={key} step={step} {...props} />;
+    case "appliance_open":   return <ApplianceOpenStep    key={key} step={step} {...props} />;
+    case "take_out":         return <TakeOutStep          key={key} step={step} {...props} />;
+    case "spread":           return <SpreadStep           key={key} step={step} {...props} />;
+    case "eat":              return <EatStep              key={key} step={step} {...props} />;
+    case "finale":           return <FinaleStep           key={key} step={step} {...props} />;
   }
 }

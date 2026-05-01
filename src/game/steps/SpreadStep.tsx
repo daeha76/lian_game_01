@@ -1,10 +1,40 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { JamStep as JS, StepProps } from "../types";
+import type { SpreadStep as SS, StepProps, SpreadColor } from "../types";
 import styles from "./steps.module.css";
 
-export default function JamStep({ step, onComplete, setMessage }: StepProps<JS>) {
+interface ColorPalette {
+  /** radial gradient stops for jam/cream blob */
+  inner: string;
+  middle: string;
+  outer: string;
+  /** highlight dot color */
+  shine: string;
+  /** 칠해진 픽셀 감지 함수 */
+  detect: (r: number, g: number, b: number) => boolean;
+}
+
+const PALETTES: Record<SpreadColor, ColorPalette> = {
+  pink: {
+    inner:  "rgba(255, 90, 130, 0.85)",
+    middle: "rgba(220, 50, 100, 0.75)",
+    outer:  "rgba(180, 30, 80, 0)",
+    shine:  "rgba(255, 220, 230, 0.55)",
+    // 핑크: R 높음, G 낮음, R이 G보다 50 이상 큼 → 빵 베이지(R~G)와 구분
+    detect: (r, g) => r > 180 && g < 130 && r > g + 50,
+  },
+  orange: {
+    inner:  "rgba(255, 165, 60, 0.85)",
+    middle: "rgba(230, 130, 40, 0.75)",
+    outer:  "rgba(200, 90, 20, 0)",
+    shine:  "rgba(255, 240, 200, 0.55)",
+    // 오렌지: R 높음, G 중간(but 빵 베이지보다 낮음), B 낮음 — 빵 base는 G≥195 또는 B≥90 으로 거름
+    detect: (r, g, b) => r > 200 && g > 95 && g < 195 && b < 90,
+  },
+};
+
+export default function SpreadStep({ step, onComplete, setMessage }: StepProps<SS>) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const finishedRef = useRef(false);
 
@@ -18,6 +48,8 @@ export default function JamStep({ step, onComplete, setMessage }: StepProps<JS>)
     const H = 220;
     canvas.width = W;
     canvas.height = H;
+
+    const palette = PALETTES[step.color];
 
     function breadPath() {
       const padX = 40;
@@ -43,7 +75,7 @@ export default function JamStep({ step, onComplete, setMessage }: StepProps<JS>)
     ctx.fill();
     ctx.restore();
 
-    // 빵 본체
+    // 빵/케익 본체
     breadPath();
     const grad = ctx.createLinearGradient(0, 40, 0, H - 40);
     grad.addColorStop(0, "#f5d59a");
@@ -52,7 +84,7 @@ export default function JamStep({ step, onComplete, setMessage }: StepProps<JS>)
     ctx.fillStyle = grad;
     ctx.fill();
 
-    // 위쪽 하이라이트 + 칼집
+    // 위쪽 하이라이트 + 줄무늬
     ctx.save();
     breadPath();
     ctx.clip();
@@ -74,7 +106,7 @@ export default function JamStep({ step, onComplete, setMessage }: StepProps<JS>)
     }
     ctx.restore();
 
-    // 빵 픽셀 카운트 (잼 진행률 계산용)
+    // 빵 픽셀 카운트
     let breadPixelCount = 0;
     {
       const initData = ctx.getImageData(0, 0, W, H).data;
@@ -85,19 +117,18 @@ export default function JamStep({ step, onComplete, setMessage }: StepProps<JS>)
 
     function paintBlob(x: number, y: number, r: number) {
       ctx!.save();
-      ctx!.globalCompositeOperation = "source-atop"; // 빵 위에서만 그려짐
+      ctx!.globalCompositeOperation = "source-atop";
       const g = ctx!.createRadialGradient(x - r * 0.2, y - r * 0.2, 0, x, y, r);
-      g.addColorStop(0, "rgba(255, 90, 130, 0.85)");
-      g.addColorStop(0.6, "rgba(220, 50, 100, 0.75)");
-      g.addColorStop(1, "rgba(180, 30, 80, 0)");
+      g.addColorStop(0, palette.inner);
+      g.addColorStop(0.6, palette.middle);
+      g.addColorStop(1, palette.outer);
       ctx!.fillStyle = g;
       ctx!.beginPath();
       ctx!.arc(x, y, r, 0, Math.PI * 2);
       ctx!.fill();
 
-      // 광택 점 (가끔)
       if (Math.random() < 0.45) {
-        ctx!.fillStyle = "rgba(255, 220, 230, 0.55)";
+        ctx!.fillStyle = palette.shine;
         ctx!.beginPath();
         ctx!.arc(
           x - r * 0.35 + (Math.random() - 0.5) * 6,
@@ -115,10 +146,7 @@ export default function JamStep({ step, onComplete, setMessage }: StepProps<JS>)
       const rect = canvas!.getBoundingClientRect();
       const sx = canvas!.width / rect.width;
       const sy = canvas!.height / rect.height;
-      return {
-        x: (e.clientX - rect.left) * sx,
-        y: (e.clientY - rect.top) * sy,
-      };
+      return { x: (e.clientX - rect.left) * sx, y: (e.clientY - rect.top) * sy };
     }
 
     function paintLine(x0: number, y0: number, x1: number, y1: number) {
@@ -135,15 +163,16 @@ export default function JamStep({ step, onComplete, setMessage }: StepProps<JS>)
 
     function checkProgress() {
       const data = ctx!.getImageData(0, 0, W, H).data;
-      let jam = 0;
+      let painted = 0;
       for (let i = 0; i < data.length; i += 4) {
         const a = data[i + 3];
         if (a < 100) continue;
         const r = data[i];
         const g = data[i + 1];
-        if (r > 180 && g < 130 && r > g + 50) jam++;
+        const b = data[i + 2];
+        if (palette.detect(r, g, b)) painted++;
       }
-      return breadPixelCount > 0 ? jam / breadPixelCount : 0;
+      return breadPixelCount > 0 ? painted / breadPixelCount : 0;
     }
 
     let painting = false;
@@ -171,7 +200,7 @@ export default function JamStep({ step, onComplete, setMessage }: StepProps<JS>)
         if (ratio >= step.target) {
           finishedRef.current = true;
           painting = false;
-          setMessage("잼이 듬뿍! 맛있겠다 😋");
+          setMessage(step.color === "orange" ? "생크림 듬뿍! 맛있겠다 😋" : "잼이 듬뿍! 맛있겠다 😋");
           setTimeout(onComplete, 800);
         }
       }
