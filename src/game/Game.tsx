@@ -10,6 +10,9 @@ const THEMES: Record<SpreadColor, { dots: string; light: string; main: string; g
   orange: { dots: "#ffe0b2", light: "#ffc880", main: "#ff8a3d", grad: "#ffb060", dark: "#c25a18" },
   yellow: { dots: "#fff3a0", light: "#ffe566", main: "#f5b800", grad: "#ffdb50", dark: "#c08800" },
   green:  { dots: "#c8f5c0", light: "#a0e87a", main: "#3db840", grad: "#85d860", dark: "#267a20" },
+  blue:   { dots: "#b0c8ff", light: "#80aaff", main: "#4466ee", grad: "#6688ff", dark: "#2233bb" },
+  indigo: { dots: "#c0b8f0", light: "#8877dd", main: "#5544bb", grad: "#7766cc", dark: "#332299" },
+  purple: { dots: "#e0b8f8", light: "#cc88ee", main: "#9933cc", grad: "#bb66dd", dark: "#7722aa" },
 };
 
 import TalkStep from "./steps/TalkStep";

@@ -1,5 +1,5 @@
 export type Appliance = "stove" | "air_fryer";
-export type SpreadColor = "pink" | "orange" | "yellow" | "green";
+export type SpreadColor = "pink" | "orange" | "yellow" | "green" | "blue" | "indigo" | "purple";
 
 export type StepType =
   | "talk"

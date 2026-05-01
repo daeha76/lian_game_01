@@ -21,7 +21,6 @@ const PALETTES: Record<SpreadColor, ColorPalette> = {
     middle: "rgba(220, 50, 100, 0.75)",
     outer:  "rgba(180, 30, 80, 0)",
     shine:  "rgba(255, 220, 230, 0.55)",
-    // 핑크: R 높음, G 낮음, R이 G보다 50 이상 큼 → 빵 베이지(R~G)와 구분
     detect: (r, g) => r > 180 && g < 130 && r > g + 50,
   },
   orange: {
@@ -43,9 +42,41 @@ const PALETTES: Record<SpreadColor, ColorPalette> = {
     middle: "rgba(40, 170, 75, 0.78)",
     outer:  "rgba(10, 130, 50, 0)",
     shine:  "rgba(200, 255, 220, 0.55)",
-    // 초록: G가 R보다 30 이상 높으면 초록 — 빵 베이지(R≥G)와 명확히 구분
     detect: (r, g) => g > r + 30 && g > 130,
   },
+  blue: {
+    inner:  "rgba(70, 90, 255, 0.90)",
+    middle: "rgba(50, 65, 220, 0.78)",
+    outer:  "rgba(30, 45, 180, 0)",
+    shine:  "rgba(180, 200, 255, 0.55)",
+    // 파랑: B가 R보다 30 이상 높음 — 빵 베이지(B 낮음)와 구분
+    detect: (r, _g, b) => b > r + 30 && b > 130,
+  },
+  indigo: {
+    inner:  "rgba(20, 40, 210, 0.90)",
+    middle: "rgba(10, 25, 175, 0.78)",
+    outer:  "rgba(5, 15, 145, 0)",
+    shine:  "rgba(160, 175, 245, 0.55)",
+    detect: (r, _g, b) => b > r + 30 && b > 130,
+  },
+  purple: {
+    inner:  "rgba(160, 50, 220, 0.90)",
+    middle: "rgba(125, 30, 180, 0.78)",
+    outer:  "rgba(90, 15, 145, 0)",
+    shine:  "rgba(230, 180, 255, 0.55)",
+    // 보라: R과 B 모두 G보다 높음, B도 충분히 높음
+    detect: (r, g, b) => r > g + 60 && b > g + 40,
+  },
+};
+
+const SPREAD_DONE: Record<SpreadColor, string> = {
+  pink:   "딸기잼 듬뿍! 맛있겠다 😋",
+  orange: "생크림 듬뿍! 맛있겠다 😋",
+  yellow: "바나나 크림 듬뿍! 맛있겠다 😋",
+  green:  "메론 크림 듬뿍! 맛있겠다 😋",
+  blue:   "블루베리잼 듬뿍! 맛있겠다 😋",
+  indigo: "자두잼 듬뿍! 맛있겠다 😋",
+  purple: "포도잼 듬뿍! 맛있겠다 😋",
 };
 
 export default function SpreadStep({ step, onComplete, setMessage }: StepProps<SS>) {
@@ -214,7 +245,7 @@ export default function SpreadStep({ step, onComplete, setMessage }: StepProps<S
         if (ratio >= step.target) {
           finishedRef.current = true;
           painting = false;
-          setMessage(step.color === "orange" ? "생크림 듬뿍! 맛있겠다 😋" : "잼이 듬뿍! 맛있겠다 😋");
+          setMessage(SPREAD_DONE[step.color]);
           setTimeout(onComplete, 800);
         }
       }
