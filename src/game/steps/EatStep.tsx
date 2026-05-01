@@ -11,6 +11,7 @@ const BITE_MESSAGES = ["냠~ 맛있다!", "냠냠~ 더 줘!", "냠냠냠~ 정말
 const SPREAD_GRADIENT: Record<SpreadColor, string> = {
   pink:   "radial-gradient(ellipse at 30% 30%, #ff5d92 0%, #d6457f 60%, transparent 100%)",
   orange: "radial-gradient(ellipse at 30% 30%, #ffa84d 0%, #e07b1a 60%, transparent 100%)",
+  yellow: "radial-gradient(ellipse at 30% 30%, #ffe040 0%, #f0c000 60%, transparent 100%)",
 };
 
 /**

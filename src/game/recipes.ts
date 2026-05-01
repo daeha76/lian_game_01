@@ -62,6 +62,36 @@ export const RECIPES: Recipe[] = [
       { type: "finale", message: "완성! 정말 잘했어! 🎉", button: "다시 하기" },
     ],
   },
+  {
+    id: "banana_cake",
+    name: "바나나 케익",
+    finalImage: "/assets/banana-cake.png",
+    rawEmoji: "🥞",
+    cookedEmoji: "🧁",
+    spreadColor: "yellow",
+    steps: [
+      { type: "talk", message: "오늘은 바나나 케익을 만들어 볼까? 🍌", button: "알았어!" },
+      {
+        type: "ingredients",
+        message: "바나나를 볼에 담아봐!",
+        items: [
+          { emoji: "🍌", label: "바나나" },
+        ],
+      },
+      { type: "crack_egg", message: "달걀을 탁탁 깨봐! 💥", taps: 3 },
+      { type: "whisk",     message: "거품기로 빙글빙글 저어봐! 세 바퀴~", target: 3 },
+      { type: "pour",      message: "우유를 부어봐! 촤르르~", emoji: "🥛", label: "우유", taps: 3 },
+      { type: "pour",      message: "밀가루를 넣어봐! 솔솔~", emoji: "🌾", label: "밀가루", taps: 3 },
+      { type: "knead",     message: "반죽을 조물조물! 5번 눌러봐", target: 5 },
+      { type: "appliance_in",   message: "케익을 에어프라이기에 끌어다 놓아봐!", appliance: "air_fryer" },
+      { type: "appliance_run",  message: "에어프라이기로 굽는 중... 💨", duration: 3000, appliance: "air_fryer" },
+      { type: "appliance_open", message: "다 됐다! 문을 열어봐",     appliance: "air_fryer" },
+      { type: "take_out", message: "케익을 꺼내자!" },
+      { type: "spread", message: "바나나 크림을 발라봐! 케익 위에서 문질문질~", color: "yellow", target: 0.45 },
+      { type: "eat", message: "친구에게 케익을 줘봐! 입에 끌어다 놓으면 냠냠 먹어요", bites: 3 },
+      { type: "finale", message: "완성! 정말 잘했어! 🎉", button: "다시 하기" },
+    ],
+  },
 ];
 
 export function pickRandomRecipe(): Recipe {
