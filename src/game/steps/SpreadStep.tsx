@@ -43,8 +43,8 @@ const PALETTES: Record<SpreadColor, ColorPalette> = {
     middle: "rgba(40, 170, 75, 0.78)",
     outer:  "rgba(10, 130, 50, 0)",
     shine:  "rgba(200, 255, 220, 0.55)",
-    // 초록: G 높음, R 낮음 — 빵 베이지(R≥G)와 명확히 구분
-    detect: (r, g, b) => g > 155 && r < 155 && b < 130,
+    // 초록: G가 R보다 30 이상 높으면 초록 — 빵 베이지(R≥G)와 명확히 구분
+    detect: (r, g) => g > r + 30 && g > 130,
   },
 };
 
