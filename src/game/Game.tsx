@@ -1,9 +1,16 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
-import { Recipe, Step } from "./types";
+import { useState, useCallback, useRef, useEffect, CSSProperties } from "react";
+import { Recipe, Step, SpreadColor } from "./types";
 import { RECIPES } from "./recipes";
 import styles from "./Game.module.css";
+
+const THEMES: Record<SpreadColor, { dots: string; light: string; main: string; grad: string; dark: string }> = {
+  pink:   { dots: "#ffd1e0", light: "#ffb3cc", main: "#ff5d92", grad: "#ff8eb5", dark: "#d6457f" },
+  orange: { dots: "#ffe0b2", light: "#ffc880", main: "#ff8a3d", grad: "#ffb060", dark: "#c25a18" },
+  yellow: { dots: "#fff3a0", light: "#ffe566", main: "#f5b800", grad: "#ffdb50", dark: "#c08800" },
+  green:  { dots: "#c8f5c0", light: "#a0e87a", main: "#3db840", grad: "#85d860", dark: "#267a20" },
+};
 
 import TalkStep from "./steps/TalkStep";
 import IngredientsStep from "./steps/IngredientsStep";
@@ -64,8 +71,17 @@ export default function Game() {
     else next();
   }
 
+  const theme = THEMES[recipe?.spreadColor ?? "pink"];
+  const themeVars = {
+    "--theme-dots":  theme.dots,
+    "--theme-light": theme.light,
+    "--theme-main":  theme.main,
+    "--theme-grad":  theme.grad,
+    "--theme-dark":  theme.dark,
+  } as CSSProperties;
+
   return (
-    <div className={styles.app}>
+    <div className={styles.app} style={themeVars}>
       <div className={styles.bgDots} />
       <main className={styles.stage}>
         <div className={styles.speech}>
