@@ -16,10 +16,11 @@ const SPREAD_GRADIENT: Record<SpreadColor, string> = {
   blue:   "radial-gradient(ellipse at 30% 30%, #6688ff 0%, #4455ee 60%, transparent 100%)",
   indigo: "radial-gradient(ellipse at 30% 30%, #5566cc 0%, #3344aa 60%, transparent 100%)",
   purple: "radial-gradient(ellipse at 30% 30%, #bb66dd 0%, #8833bb 60%, transparent 100%)",
+  blush:  "radial-gradient(ellipse at 30% 30%, #ffccdd 0%, #ff88aa 60%, transparent 100%)",
 };
 
 /**
- * 잼/생크림 발린 빵/케익을 캐릭터 입에 드래그.
+ * 잼/생크림 발린 빵/케잌을 캐릭터 입에 드래그.
  * step.bites 만큼 베어물면 다음 단계로.
  */
 export default function EatStep({ step, recipe, onComplete, setMessage }: StepProps<ES>) {

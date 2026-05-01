@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffb3cc"/>
+      <stop offset="100%" stop-color="#ff5d92"/>
+    </linearGradient>
+    <radialGradient id="dot" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#ffe0ec"/>
+      <stop offset="100%" stop-color="#ffe0ec" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- 둥근 사각형 핑크 배경 -->
+  <rect width="512" height="512" rx="96" ry="96" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="96" ry="96" fill="url(#dot)"/>
+
+  <!-- 케이크 받침 -->
+  <ellipse cx="256" cy="392" rx="180" ry="22" fill="#7a4a1f" opacity="0.25"/>
+
+  <!-- 케이크 본체 (3단) -->
+  <g>
+    <!-- 아래 단 (가장 큰 핑크) -->
+    <rect x="92" y="280" width="328" height="100" rx="14" fill="#fff0e0"/>
+    <rect x="92" y="280" width="328" height="22" fill="#ff8eb5"/>
+    <!-- 가운데 단 (크림) -->
+    <rect x="120" y="220" width="272" height="70" rx="12" fill="#fff5e8"/>
+    <rect x="120" y="220" width="272" height="18" fill="#ffd1a0"/>
+    <!-- 위 단 (작은 흰 크림) -->
+    <rect x="158" y="170" width="196" height="58" rx="10" fill="#fffaf0"/>
+    <rect x="158" y="170" width="196" height="14" fill="#ffd6e0"/>
+  </g>
+
+  <!-- 딸기 토핑 -->
+  <g>
+    <ellipse cx="256" cy="158" rx="22" ry="20" fill="#ff3b5e"/>
+    <path d="M 244 142 Q 256 130 268 142 Q 256 138 244 142 Z" fill="#3eb360"/>
+    <circle cx="252" cy="156" r="1.6" fill="#fff"/>
+    <circle cx="262" cy="160" r="1.6" fill="#fff"/>
+    <circle cx="256" cy="166" r="1.6" fill="#fff"/>
+  </g>
+
+  <!-- 양옆 작은 베리 토핑 -->
+  <circle cx="180" cy="208" r="10" fill="#cc3a6c"/>
+  <circle cx="332" cy="208" r="10" fill="#cc3a6c"/>
+
+  <!-- 양옆 흰 크림 도트 -->
+  <circle cx="130" cy="270" r="9" fill="#fffaf0"/>
+  <circle cx="382" cy="270" r="9" fill="#fffaf0"/>
+  <circle cx="160" cy="334" r="8" fill="#fffaf0"/>
+  <circle cx="352" cy="334" r="8" fill="#fffaf0"/>
+
+  <!-- 반짝이 -->
+  <g fill="#fff" opacity="0.85">
+    <circle cx="106" cy="120" r="6"/>
+    <circle cx="406" cy="118" r="5"/>
+    <circle cx="80"  cy="220" r="4"/>
+    <circle cx="430" cy="240" r="4"/>
+    <circle cx="120" cy="430" r="5"/>
+    <circle cx="392" cy="424" r="6"/>
+  </g>
+</svg>

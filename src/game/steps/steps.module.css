@@ -379,6 +379,250 @@
   pointer-events: none;
 }
 
+/* === 믹서기 === */
+.blender {
+  width: 180px;
+  height: 240px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+.blenderJar {
+  width: 130px;
+  height: 170px;
+  border-radius: 14px 14px 26px 26px;
+  background: linear-gradient(180deg,
+      rgba(220, 235, 255, 0.55) 0%,
+      rgba(190, 215, 245, 0.5) 50%,
+      rgba(170, 200, 235, 0.55) 100%);
+  border: 4px solid #b0c4d8;
+  border-bottom: 0;
+  box-shadow: inset -8px 0 16px rgba(255,255,255,0.45),
+              inset 8px 0 16px rgba(120,150,180,0.25);
+  position: relative;
+  overflow: hidden;
+}
+.blenderJar::before {
+  /* 뚜껑 */
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -8px;
+  right: -8px;
+  height: 16px;
+  background: linear-gradient(180deg, #c8d4e0 0%, #98a8b8 100%);
+  border-radius: 8px 8px 4px 4px;
+  border: 3px solid #909eac;
+}
+.blenderContent {
+  position: absolute;
+  inset: 14px 6px 6px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(48px, 12vw, 70px);
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.18));
+}
+.blenderBase {
+  width: 170px;
+  height: 70px;
+  background: linear-gradient(180deg, #4a4a52 0%, #2a2a32 100%);
+  border-radius: 0 0 16px 16px;
+  border-top: 4px solid #6a6a72;
+  margin-top: -4px;
+  box-shadow: 0 6px 0 #1a1a22, 0 8px 14px rgba(0,0,0,0.18);
+  position: relative;
+}
+.blenderBase::after {
+  /* 다이얼 */
+  content: "";
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #c0c0c8 0%, #707078 70%);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.4);
+}
+.blenderOn .blenderJar {
+  animation: blenderShake 0.18s infinite alternate;
+}
+.blenderOn .blenderContent {
+  animation: blenderSpin 0.5s linear infinite;
+}
+@keyframes blenderShake {
+  from { transform: translateX(-1.5px) rotate(-0.4deg); }
+  to   { transform: translateX(1.5px)  rotate(0.4deg);  }
+}
+@keyframes blenderSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* === 냉동실 === */
+.freezer {
+  width: 180px;
+  height: 240px;
+  background: linear-gradient(180deg, #f0f8ff 0%, #cce0f0 100%);
+  border-radius: 14px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 0 #88a8c0, inset 0 0 0 4px #b0c8d8;
+  overflow: hidden;
+}
+.freezerInside {
+  width: 130px;
+  height: 170px;
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,0.85) 0%, rgba(220,235,250,0.9) 60%, rgba(180,210,235,0.95) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 70px;
+  border: 3px solid #b8d0e0;
+  box-shadow: inset 0 0 18px rgba(180,210,235,0.6);
+  z-index: 1;
+}
+.freezerHandle {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 50px;
+  background: #6a8090;
+  border-radius: 4px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.25);
+  z-index: 2;
+}
+.freezer::before {
+  /* 위쪽 트레이 라인 */
+  content: "";
+  position: absolute;
+  top: 22%;
+  left: 8%;
+  right: 8%;
+  height: 4px;
+  background: rgba(150, 180, 200, 0.6);
+  border-radius: 2px;
+  z-index: 1;
+}
+.freezerOn .freezerInside {
+  animation: freezerChill 0.9s ease-in-out infinite alternate;
+}
+@keyframes freezerChill {
+  from { box-shadow: inset 0 0 18px rgba(180,210,235,0.6); }
+  to   { box-shadow: inset 0 0 36px rgba(140,200,240,0.95), 0 0 18px rgba(140,200,240,0.5); }
+}
+.freezerSnow {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 18px;
+  letter-spacing: 6px;
+  z-index: 3;
+  animation: freezerSnowDrift 1.4s ease-in-out infinite alternate;
+}
+@keyframes freezerSnowDrift {
+  from { transform: translateY(0)   rotate(-3deg); opacity: 0.85; }
+  to   { transform: translateY(6px) rotate(3deg);  opacity: 1; }
+}
+
+/* === 손질 (씻기 / 손질 / 잘게 자르기) === */
+.prepLayout {
+  position: relative;
+  width: clamp(260px, 70vw, 340px);
+  height: clamp(220px, 55vw, 280px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+}
+.prepWashBowl {
+  position: absolute;
+  inset: 30% 8% 8% 8%;
+  background: linear-gradient(180deg, #d8d4cc 0%, #a89e92 70%, #7a7268 100%);
+  border-radius: 0 0 130px 130px / 0 0 90px 90px;
+  box-shadow: inset 0 -8px 0 rgba(0,0,0,0.18), 0 6px 0 #5a554c;
+  overflow: hidden;
+}
+.prepWashWater {
+  position: absolute;
+  inset: 8px 0 0 0;
+  background: linear-gradient(180deg,
+      rgba(150, 200, 255, 0.7) 0%,
+      rgba(100, 170, 230, 0.85) 100%);
+  transition: opacity 0.3s ease;
+  border-radius: 0 0 130px 130px / 0 0 90px 90px;
+}
+.prepBoard {
+  position: absolute;
+  inset: 50% 5% 8% 5%;
+  background: linear-gradient(180deg, #e8c890 0%, #c8a468 100%);
+  border-radius: 12px;
+  box-shadow: 0 6px 0 #886030, inset 0 -4px 0 rgba(0,0,0,0.12);
+}
+.prepFruitWrap {
+  position: relative;
+  z-index: 2;
+  font-size: clamp(72px, 18vw, 104px);
+  line-height: 1;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.18));
+  pointer-events: none;
+}
+.prepFruit {
+  display: inline-block;
+}
+.prepFruitTap {
+  animation: prepTap 0.22s ease;
+}
+@keyframes prepTap {
+  0%   { transform: scale(1)    rotate(0deg); }
+  35%  { transform: scale(1.12) rotate(-6deg); }
+  65%  { transform: scale(0.92) rotate(5deg); }
+  100% { transform: scale(1)    rotate(0deg); }
+}
+.prepPieces {
+  position: relative;
+  width: 200px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.prepPiece {
+  position: absolute;
+  display: inline-block;
+  animation: prepPieceIn 0.3s ease;
+}
+@keyframes prepPieceIn {
+  from { transform: scale(0); opacity: 0; }
+  to   { opacity: 1; }
+}
+.prepTool {
+  position: absolute;
+  top: 8%;
+  right: 10%;
+  font-size: clamp(36px, 9vw, 56px);
+  z-index: 3;
+  filter: drop-shadow(0 3px 5px rgba(0,0,0,0.2));
+  animation: prepToolFloat 1.6s ease-in-out infinite;
+}
+@keyframes prepToolFloat {
+  0%, 100% { transform: translateY(0)   rotate(-8deg); }
+  50%      { transform: translateY(-6px) rotate(8deg); }
+}
+
 /* === 빵 === */
 .bread {
   font-size: clamp(80px, 18vw, 130px);

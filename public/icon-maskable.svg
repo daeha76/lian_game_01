@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffb3cc"/>
+      <stop offset="100%" stop-color="#ff5d92"/>
+    </linearGradient>
+  </defs>
+
+  <!-- maskable: 가장자리가 잘릴 수 있으므로 배경을 가득 채우고 본체는 안전 영역(중앙 60%) 안에 -->
+  <rect width="512" height="512" fill="url(#bg)"/>
+
+  <!-- 케이크 (안전 영역 안에 80% 크기로 배치) -->
+  <g transform="translate(0, 12)">
+    <ellipse cx="256" cy="372" rx="140" ry="18" fill="#7a4a1f" opacity="0.25"/>
+
+    <rect x="116" y="270" width="280" height="92" rx="14" fill="#fff0e0"/>
+    <rect x="116" y="270" width="280" height="22" fill="#ff8eb5"/>
+
+    <rect x="142" y="220" width="228" height="60" rx="12" fill="#fff5e8"/>
+    <rect x="142" y="220" width="228" height="16" fill="#ffd1a0"/>
+
+    <rect x="178" y="178" width="156" height="48" rx="10" fill="#fffaf0"/>
+    <rect x="178" y="178" width="156" height="14" fill="#ffd6e0"/>
+
+    <ellipse cx="256" cy="170" rx="20" ry="18" fill="#ff3b5e"/>
+    <path d="M 244 156 Q 256 146 268 156 Q 256 152 244 156 Z" fill="#3eb360"/>
+
+    <circle cx="200" cy="208" r="9" fill="#cc3a6c"/>
+    <circle cx="312" cy="208" r="9" fill="#cc3a6c"/>
+  </g>
+</svg>

@@ -4,18 +4,26 @@ import { useEffect, useState } from "react";
 import type { ApplianceRunStep as ARS, StepProps } from "../types";
 import styles from "./steps.module.css";
 
-/** 가스레인지/에어프라이기로 굽는 중 */
+/** 가스레인지/에어프라이기로 굽는 중 / 믹서기로 가는 중 */
 export default function ApplianceRunStep({ step, recipe, onComplete, setMessage }: StepProps<ARS>) {
   const [cooked, setCooked] = useState(false);
   const isAirFryer = step.appliance === "air_fryer";
+  const isBlender  = step.appliance === "blender";
+  const isFreezer  = step.appliance === "freezer";
 
   useEffect(() => {
     let dots = 0;
-    const verb = isAirFryer ? "에어프라이기로 굽는 중" : "맛있게 구워지는 중";
-    const fire = isAirFryer ? "💨" : "🔥";
+    const verb = isFreezer
+      ? "꽁꽁 얼리는 중"
+      : isBlender
+        ? "위잉~ 가는 중"
+        : isAirFryer
+          ? "에어프라이기로 굽는 중"
+          : "맛있게 구워지는 중";
+    const fx = isFreezer ? "❄️" : isBlender ? "🌀" : isAirFryer ? "💨" : "🔥";
     const interval = setInterval(() => {
       dots = (dots + 1) % 4;
-      setMessage(verb + ".".repeat(dots) + " " + fire);
+      setMessage(verb + ".".repeat(dots) + " " + fx);
     }, 400);
     const timer = setTimeout(() => {
       clearInterval(interval);
@@ -30,6 +38,27 @@ export default function ApplianceRunStep({ step, recipe, onComplete, setMessage 
   }, []);
 
   const food = cooked ? recipe.cookedEmoji : recipe.rawEmoji;
+
+  if (isBlender) {
+    return (
+      <div className={`${styles.blender} ${styles.blenderOn}`}>
+        <div className={styles.blenderJar}>
+          <div className={styles.blenderContent}>{food}</div>
+        </div>
+        <div className={styles.blenderBase} />
+      </div>
+    );
+  }
+
+  if (isFreezer) {
+    return (
+      <div className={`${styles.freezer} ${styles.freezerOn}`}>
+        <div className={styles.freezerInside}>{food}</div>
+        <div className={styles.freezerHandle} />
+        <div className={styles.freezerSnow}>❄️ ❄️ ❄️</div>
+      </div>
+    );
+  }
 
   return isAirFryer ? (
     <div className={`${styles.airFryer} ${styles.airFryerOn}`}>

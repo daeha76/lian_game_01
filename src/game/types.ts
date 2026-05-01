@@ -1,5 +1,7 @@
-export type Appliance = "stove" | "air_fryer";
-export type SpreadColor = "pink" | "orange" | "yellow" | "green" | "blue" | "indigo" | "purple";
+export type Appliance = "stove" | "air_fryer" | "blender" | "freezer";
+export type SpreadColor = "pink" | "orange" | "yellow" | "green" | "blue" | "indigo" | "purple" | "blush";
+export type RecipeCategory = "cake" | "milk" | "icecream";
+export type PrepKind = "wash" | "trim" | "chop";
 
 export type StepType =
   | "talk"
@@ -9,6 +11,7 @@ export type StepType =
   | "pour"
   | "knead"
   | "roll"
+  | "prep"
   | "appliance_in"
   | "appliance_run"
   | "appliance_open"
@@ -39,6 +42,14 @@ export interface PourStep extends BaseStep {
 }
 export interface KneadStep extends BaseStep { type: "knead"; target: number; }
 export interface RollStep extends BaseStep { type: "roll"; target: number; }
+
+/** 씻기 / 손질 / 잘게 자르기 — 과일을 N번 탭 */
+export interface PrepStep extends BaseStep {
+  type: "prep";
+  kind: PrepKind;
+  emoji: string;
+  target: number;
+}
 
 export interface ApplianceInStep extends BaseStep {
   type: "appliance_in";
@@ -73,6 +84,7 @@ export type Step =
   | PourStep
   | KneadStep
   | RollStep
+  | PrepStep
   | ApplianceInStep
   | ApplianceRunStep
   | ApplianceOpenStep
@@ -84,6 +96,7 @@ export type Step =
 export interface Recipe {
   id: string;
   name: string;
+  category: RecipeCategory;
   finalImage: string;
   /** 안 구운 모양 (반죽 단계 후 가전에 들어가는 음식) */
   rawEmoji: string;

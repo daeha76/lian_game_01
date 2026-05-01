@@ -67,6 +67,13 @@ const PALETTES: Record<SpreadColor, ColorPalette> = {
     // 보라: R과 B 모두 G보다 높음, B도 충분히 높음
     detect: (r, g, b) => r > g + 60 && b > g + 40,
   },
+  blush: {
+    inner:  "rgba(255, 170, 200, 0.85)",
+    middle: "rgba(240, 130, 170, 0.75)",
+    outer:  "rgba(210, 90, 140, 0)",
+    shine:  "rgba(255, 235, 245, 0.55)",
+    detect: (r, g) => r > 210 && g < 160 && r > g + 55,
+  },
 };
 
 const SPREAD_DONE: Record<SpreadColor, string> = {
@@ -77,6 +84,7 @@ const SPREAD_DONE: Record<SpreadColor, string> = {
   blue:   "블루베리잼 듬뿍! 맛있겠다 😋",
   indigo: "자두잼 듬뿍! 맛있겠다 😋",
   purple: "포도잼 듬뿍! 맛있겠다 😋",
+  blush:  "딸기우유 완성! 맛있겠다 😋",
 };
 
 export default function SpreadStep({ step, onComplete, setMessage }: StepProps<SS>) {
@@ -120,7 +128,7 @@ export default function SpreadStep({ step, onComplete, setMessage }: StepProps<S
     ctx.fill();
     ctx.restore();
 
-    // 빵/케익 본체
+    // 빵/케잌 본체
     breadPath();
     const grad = ctx.createLinearGradient(0, 40, 0, H - 40);
     grad.addColorStop(0, "#f5d59a");

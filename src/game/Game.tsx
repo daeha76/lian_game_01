@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect, CSSProperties } from "react";
-import { Recipe, Step, SpreadColor } from "./types";
+import { Recipe, Step, SpreadColor, RecipeCategory } from "./types";
 import { RECIPES } from "./recipes";
 import styles from "./Game.module.css";
 
@@ -13,7 +13,14 @@ const THEMES: Record<SpreadColor, { dots: string; light: string; main: string; g
   blue:   { dots: "#b0c8ff", light: "#80aaff", main: "#4466ee", grad: "#6688ff", dark: "#2233bb" },
   indigo: { dots: "#c0b8f0", light: "#8877dd", main: "#5544bb", grad: "#7766cc", dark: "#332299" },
   purple: { dots: "#e0b8f8", light: "#cc88ee", main: "#9933cc", grad: "#bb66dd", dark: "#7722aa" },
+  blush:  { dots: "#ffeaf3", light: "#ffccdd", main: "#ffaacc", grad: "#ffc4d8", dark: "#dd6688" },
 };
+
+const CATEGORIES: { key: RecipeCategory; label: string; emoji: string }[] = [
+  { key: "cake",     label: "케잌",       emoji: "🍰" },
+  { key: "milk",     label: "우유",       emoji: "🥤" },
+  { key: "icecream", label: "아이스크림", emoji: "🍦" },
+];
 
 import TalkStep from "./steps/TalkStep";
 import IngredientsStep from "./steps/IngredientsStep";
@@ -21,6 +28,7 @@ import CrackEggStep from "./steps/CrackEggStep";
 import WhiskStep from "./steps/WhiskStep";
 import PourStep from "./steps/PourStep";
 import DoughStep from "./steps/DoughStep";
+import PrepStep from "./steps/PrepStep";
 import ApplianceInStep from "./steps/ApplianceInStep";
 import ApplianceRunStep from "./steps/ApplianceRunStep";
 import ApplianceOpenStep from "./steps/ApplianceOpenStep";
@@ -33,6 +41,7 @@ export default function Game() {
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [stepIndex, setStepIndex] = useState(0);
   const [message, setMessage] = useState("오늘은 무엇을 만들까?");
+  const [category, setCategory] = useState<RecipeCategory>("cake");
 
   const stateRef = useRef({ recipe, stepIndex });
   useEffect(() => {
@@ -92,7 +101,7 @@ export default function Game() {
         </div>
         <div className={styles.playArea}>
           {showStart ? (
-            <RecipeMenu onPick={start} />
+            <RecipeMenu category={category} onChangeCategory={setCategory} onPick={start} />
           ) : currentStep && recipe ? (
             <StepRenderer
               step={currentStep}
@@ -116,19 +125,43 @@ export default function Game() {
   );
 }
 
-function RecipeMenu({ onPick }: { onPick: (r: Recipe) => void }) {
+function RecipeMenu({
+  category,
+  onChangeCategory,
+  onPick,
+}: {
+  category: RecipeCategory;
+  onChangeCategory: (c: RecipeCategory) => void;
+  onPick: (r: Recipe) => void;
+}) {
+  const filtered = RECIPES.filter((r) => r.category === category);
+
   return (
-    <div className={styles.recipeMenu}>
-      {RECIPES.map((r) => (
-        <button
-          key={r.id}
-          className={`${styles.recipeCard} ${styles[`card_${r.spreadColor ?? "pink"}`]}`}
-          onClick={() => onPick(r)}
-        >
-          <span className={styles.cardEmoji}>{r.cookedEmoji}</span>
-          <span className={styles.cardName}>{r.name}</span>
-        </button>
-      ))}
+    <div className={styles.recipeMenuWrap}>
+      <div className={styles.categoryTabs}>
+        {CATEGORIES.map((c) => (
+          <button
+            key={c.key}
+            className={`${styles.categoryTab} ${c.key === category ? styles.categoryTabActive : ""}`}
+            onClick={() => onChangeCategory(c.key)}
+          >
+            <span className={styles.categoryTabEmoji}>{c.emoji}</span>
+            <span>{c.label}</span>
+          </button>
+        ))}
+      </div>
+      <div className={styles.recipeMenu}>
+        {filtered.map((r) => (
+          <button
+            key={r.id}
+            className={`${styles.recipeCard} ${styles[`card_${r.spreadColor ?? "pink"}`]}`}
+            onClick={() => onPick(r)}
+          >
+            <span className={styles.cardEmoji}>{r.cookedEmoji}</span>
+            <span className={styles.cardName}>{r.name}</span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
@@ -157,6 +190,7 @@ function StepRenderer({
     case "pour":             return <PourStep             key={key} step={step} {...props} />;
     case "knead":
     case "roll":             return <DoughStep            key={key} step={step} {...props} />;
+    case "prep":             return <PrepStep             key={key} step={step} {...props} />;
     case "appliance_in":     return <ApplianceInStep      key={key} step={step} {...props} />;
     case "appliance_run":    return <ApplianceRunStep     key={key} step={step} {...props} />;
     case "appliance_open":   return <ApplianceOpenStep    key={key} step={step} {...props} />;
