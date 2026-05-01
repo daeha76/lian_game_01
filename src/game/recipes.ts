@@ -67,7 +67,7 @@ export const RECIPES: Recipe[] = [
     name: "바나나 케익",
     finalImage: "/assets/banana-cake.png",
     rawEmoji: "🥞",
-    cookedEmoji: "🧁",
+    cookedEmoji: "🎂",
     spreadColor: "yellow",
     steps: [
       { type: "talk", message: "오늘은 바나나 케익을 만들어 볼까? 🍌", button: "알았어!" },
