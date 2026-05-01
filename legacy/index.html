@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>리안이의 요리 게임 🍰</title>
+  <style>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      font-family: "Comic Sans MS", "Apple SD Gothic Neo", "맑은 고딕", sans-serif;
+      background: linear-gradient(180deg, #fff5f9 0%, #d4f5d4 100%);
+      overflow: hidden; touch-action: manipulation;
+    }
+    #app { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; }
+    .bg-dots {
+      position: absolute; inset: 0; pointer-events: none; opacity: 0.7; z-index: 0;
+      background-image:
+        radial-gradient(circle at 20% 15%, #ffd1e0 18px, transparent 19px),
+        radial-gradient(circle at 50% 10%, #ffd1e0 16px, transparent 17px),
+        radial-gradient(circle at 80% 18%, #ffd1e0 18px, transparent 19px),
+        radial-gradient(circle at 30% 35%, #ffd1e0 14px, transparent 15px),
+        radial-gradient(circle at 70% 38%, #ffd1e0 16px, transparent 17px),
+        radial-gradient(circle at 15% 55%, #ffd1e0 14px, transparent 15px),
+        radial-gradient(circle at 85% 60%, #ffd1e0 16px, transparent 17px);
+    }
+    #stage {
+      position: relative; z-index: 1; width: 100%; max-width: 600px; flex: 1;
+      display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+      padding: 16px; gap: 12px;
+    }
+    #speech {
+      background: white; border: 4px solid #ffb3cc; border-radius: 24px;
+      padding: 18px 24px; min-height: 70px; width: 100%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 0 #ffb3cc;
+    }
+    #message {
+      margin: 0; font-size: clamp(20px, 5vw, 28px); font-weight: bold;
+      color: #d6457f; text-align: center; line-height: 1.3;
+    }
+    #play-area {
+      flex: 1; width: 100%; display: flex; align-items: center; justify-content: center;
+      position: relative; min-height: 200px; flex-wrap: wrap;
+    }
+    .big-btn {
+      font-family: inherit; font-size: clamp(22px, 5.5vw, 32px); font-weight: bold;
+      color: white; background: linear-gradient(180deg, #ff8eb5 0%, #ff5d92 100%);
+      border: none; border-radius: 30px; padding: 18px 48px; min-width: 200px;
+      box-shadow: 0 6px 0 #d6457f, 0 8px 16px rgba(255, 93, 146, 0.3);
+      cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #d6457f, 0 4px 8px rgba(255, 93, 146, 0.3); }
+    .big-btn.hidden { display: none; }
+    #progress {
+      width: calc(100% - 32px); max-width: 600px; height: 14px;
+      background: white; border: 3px solid #ffb3cc; border-radius: 10px;
+      overflow: hidden; margin-bottom: 12px; z-index: 1;
+    }
+    #progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #ffb3cc, #ff5d92); transition: width 0.4s ease; }
+
+    /* === 드래그 가능 요소 === */
+    .draggable {
+      cursor: grab; touch-action: none;
+      transition: transform 0.3s ease;
+    }
+    .draggable.dragging {
+      cursor: grabbing; z-index: 100; transition: none;
+      filter: drop-shadow(0 8px 8px rgba(0,0,0,0.25));
+    }
+    .draggable.consumed {
+      opacity: 0; pointer-events: none;
+      transform: scale(0) !important;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    /* 드롭 가능 영역이 활성화될 때 강조 */
+    .drop-zone-active {
+      animation: glow 0.7s infinite alternate;
+    }
+    @keyframes glow {
+      from { box-shadow: 0 0 0 0 rgba(255, 200, 100, 0.0), 0 6px 0 #5a554c; }
+      to   { box-shadow: 0 0 0 12px rgba(255, 200, 100, 0.55), 0 6px 0 #5a554c; }
+    }
+    .stove.drop-zone-active {
+      animation: glow-stove 0.7s infinite alternate;
+    }
+    @keyframes glow-stove {
+      from { box-shadow: 0 0 0 0 rgba(255, 200, 100, 0.0), 0 6px 0 #555; }
+      to   { box-shadow: 0 0 0 12px rgba(255, 200, 100, 0.55), 0 6px 0 #555; }
+    }
+
+    /* === 재료 + 볼 === */
+    .ingredient {
+      display: inline-flex; flex-direction: column; align-items: center;
+      margin: 8px; font-size: clamp(56px, 13vw, 90px);
+      animation: pop-in 0.4s ease;
+    }
+    .ingredient .label {
+      font-size: clamp(14px, 3.5vw, 18px);
+      color: #d6457f; font-weight: bold; margin-top: 4px;
+    }
+    @keyframes pop-in { 0% { transform: scale(0); } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+    .bowl {
+      position: relative;
+      width: 240px; height: 110px;
+      background: linear-gradient(180deg, #d8d4cc 0%, #a89e92 70%, #7a7268 100%);
+      border-radius: 0 0 130px 130px / 0 0 90px 90px;
+      box-shadow: inset 0 -8px 0 rgba(0,0,0,0.18), 0 6px 0 #5a554c;
+      margin-top: 12px;
+    }
+    .bowl::before {
+      content: ''; position: absolute;
+      top: -10px; left: -8px; right: -8px; height: 22px;
+      background: linear-gradient(180deg, #c0baae, #a89e92);
+      border-radius: 50%;
+      box-shadow: inset 0 4px 0 rgba(255,255,255,0.35), 0 2px 0 rgba(0,0,0,0.1);
+    }
+    .bowl-content {
+      position: absolute; left: 0; right: 0; bottom: 6px;
+      display: flex; flex-wrap: wrap; gap: 6px;
+      justify-content: center; align-items: flex-end;
+      padding: 0 20px;
+    }
+    .bowl-content span {
+      font-size: 36px;
+      animation: drop-into-bowl 0.5s ease;
+    }
+    @keyframes drop-into-bowl {
+      0%   { transform: translateY(-60px) scale(1.2); opacity: 0; }
+      60%  { transform: translateY(8px) scale(1.1); opacity: 1; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    /* === 가스레인지 === */
+    .stove {
+      width: 220px; height: 180px; background: #888; border-radius: 16px;
+      position: relative; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 0 #555;
+    }
+    .stove .burner {
+      width: 130px; height: 130px; border-radius: 50%;
+      background: radial-gradient(circle, #333 0%, #555 70%);
+      display: flex; align-items: center; justify-content: center; font-size: 70px;
+      transition: background 0.3s;
+    }
+    .stove.on .burner { background: radial-gradient(circle, #ff7a3d 0%, #c04020 70%); animation: flicker 0.4s infinite alternate; }
+    @keyframes flicker { from { box-shadow: 0 0 20px #ffb070; } to { box-shadow: 0 0 40px #ff7a3d; } }
+    .lid {
+      position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
+      width: 180px; height: 24px; background: #aaa; border-radius: 12px 12px 4px 4px;
+      cursor: pointer; transition: transform 0.5s ease;
+    }
+    .lid.open { transform: translateX(-50%) translateY(-60px) rotate(-15deg); }
+
+    /* === 빵 === */
+    .bread { font-size: clamp(80px, 18vw, 130px); cursor: pointer; transition: transform 0.3s; }
+
+    /* === 잼 바르기 === */
+    .jam-area {
+      position: relative;
+      width: clamp(280px, 80vw, 360px);
+      height: clamp(180px, 50vw, 220px);
+    }
+    .jam-area canvas {
+      width: 100%; height: 100%;
+      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><circle cx='16' cy='16' r='10' fill='%23ff5d92' stroke='white' stroke-width='2'/></svg>") 16 16, crosshair;
+      touch-action: none;
+    }
+
+    /* === 완성 === */
+    .finale { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .finale img { max-width: 80vw; max-height: 50vh; border-radius: 20px; box-shadow: 0 8px 24px rgba(214, 69, 127, 0.3); animation: bounce-in 0.8s ease; }
+    .finale .placeholder-cake {
+      width: 220px; height: 220px; border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, #ffd1e0 0%, #ff8eb5 70%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 80px; box-shadow: 0 8px 24px rgba(214, 69, 127, 0.3);
+      animation: bounce-in 0.8s ease;
+    }
+    @keyframes bounce-in { 0% { transform: scale(0) rotate(-30deg); } 60% { transform: scale(1.2) rotate(10deg); } 100% { transform: scale(1) rotate(0); } }
+    .sparkles { font-size: 40px; margin: 16px 0; animation: sparkle 1.2s infinite; }
+    @keyframes sparkle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.1); } }
+
+    @media (max-height: 500px) { #speech { padding: 10px 18px; min-height: 50px; } .big-btn { padding: 12px 32px; } }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="bg-dots"></div>
+    <main id="stage">
+      <div id="speech"><p id="message">오늘은 무엇을 만들까?</p></div>
+      <div id="play-area"></div>
+      <button id="action-btn" class="big-btn">시작!</button>
+    </main>
+    <div id="progress"><div id="progress-fill"></div></div>
+  </div>
+
+  <script>
+  /* ============================================================ */
+  /* 레시피 */
+  /* ============================================================ */
+  const RECIPES = {
+    strawberry_bread: {
+      name: "딸기 빵",
+      finalImage: "assets/strawberry-bread.png",
+      steps: [
+        { type: "talk",        message: "오늘은 핑크색 음식을 만들어 볼까? 🎀", button: "알았어!" },
+        { type: "ingredients", message: "재료를 볼에 담아봐! 끌어다 놓으면 돼",
+          items: [
+            { emoji: "🌾", label: "밀가루" },
+            { emoji: "🥛", label: "우유" },
+            { emoji: "🍓", label: "딸기" },
+            { emoji: "🥚", label: "달걀" }
+          ]
+        },
+        { type: "knead",     message: "반죽을 조물조물! 5번 눌러봐",       target: 5 },
+        { type: "roll",      message: "이번엔 반죽을 밀어볼까? 5번 더!",   target: 5 },
+        { type: "stove_in",  message: "빵을 가스레인지에 끌어다 놓아봐!" },
+        { type: "cook",      message: "맛있게 구워지는 중... 🔥",         duration: 3000 },
+        { type: "lid_open",  message: "다 됐다! 뚜껑을 열어봐" },
+        { type: "take_out",  message: "빵을 꺼내자!" },
+        { type: "jam",       message: "딸기잼을 발라봐! 빵 위에서 문질문질~", target: 0.45 },
+        { type: "finale",    message: "완성! 정말 잘했어! 🎉",            button: "다시 하기" }
+      ]
+    }
+  };
+
+  /* ============================================================ */
+  /* 드래그 헬퍼 — Pointer Events 기반 (PC, 태블릿, 모바일 통합) */
+  /* ============================================================ */
+  function makeDraggable(source, getDropTargets) {
+    source.classList.add('draggable');
+    let dragging = false;
+    let startX = 0, startY = 0, pointerId = null;
+    let activeTargets = [];
+
+    source.addEventListener('pointerdown', (e) => {
+      if (source.classList.contains('consumed')) return;
+      e.preventDefault();
+      dragging = true;
+      pointerId = e.pointerId;
+      startX = e.clientX;
+      startY = e.clientY;
+      try { source.setPointerCapture(pointerId); } catch (_) {}
+      source.classList.add('dragging');
+      activeTargets = getDropTargets() || [];
+      activeTargets.forEach(t => t.el.classList.add('drop-zone-active'));
+    });
+
+    source.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      source.style.transform = `translate(${dx}px, ${dy}px) scale(1.1)`;
+    });
+
+    function endDrag(e, cancelled) {
+      if (!dragging) return;
+      dragging = false;
+      try { source.releasePointerCapture(pointerId); } catch (_) {}
+      source.classList.remove('dragging');
+      activeTargets.forEach(t => t.el.classList.remove('drop-zone-active'));
+
+      let matched = null;
+      if (!cancelled && e) {
+        // hit test
+        source.style.visibility = 'hidden';
+        const dropEl = document.elementFromPoint(e.clientX, e.clientY);
+        source.style.visibility = '';
+        for (const t of activeTargets) {
+          if (t.el === dropEl || (dropEl && t.el.contains(dropEl))) {
+            matched = t;
+            break;
+          }
+        }
+      }
+
+      if (matched) {
+        matched.onDrop();
+        // consumed가 되든 어떻든 transform 그대로 두면 자연스러움
+      } else {
+        // 원위치로 부드럽게
+        source.style.transition = 'transform 0.4s ease';
+        source.style.transform = '';
+        source.addEventListener('transitionend', () => {
+          source.style.transition = '';
+        }, { once: true });
+      }
+      activeTargets = [];
+    }
+
+    source.addEventListener('pointerup', (e) => endDrag(e, false));
+    source.addEventListener('pointercancel', (e) => endDrag(e, true));
+  }
+
+  /* ============================================================ */
+  /* 게임 엔진 */
+  /* ============================================================ */
+  const messageEl = document.getElementById('message');
+  const playArea  = document.getElementById('play-area');
+  const btn       = document.getElementById('action-btn');
+  const progress  = document.getElementById('progress-fill');
+
+  let currentRecipe = null;
+  let stepIndex = 0;
+
+  function init() {
+    messageEl.textContent = "오늘은 무엇을 만들까?";
+    playArea.innerHTML = "";
+    btn.textContent = "시작!";
+    btn.classList.remove('hidden');
+    progress.style.width = "0%";
+    btn.onclick = startGame;
+  }
+
+  function startGame() {
+    const keys = Object.keys(RECIPES);
+    const key = keys[Math.floor(Math.random() * keys.length)];
+    currentRecipe = RECIPES[key];
+    stepIndex = 0;
+    runStep();
+  }
+
+  function updateProgress() {
+    const total = currentRecipe.steps.length;
+    progress.style.width = ((stepIndex / total) * 100) + "%";
+  }
+
+  function nextStep() {
+    stepIndex++;
+    if (stepIndex >= currentRecipe.steps.length) { init(); return; }
+    runStep();
+  }
+
+  function runStep() {
+    updateProgress();
+    const step = currentRecipe.steps[stepIndex];
+    messageEl.textContent = step.message;
+    playArea.innerHTML = "";
+    if (step.button) {
+      btn.textContent = step.button;
+      btn.classList.remove('hidden');
+      btn.onclick = nextStep;
+    } else {
+      btn.classList.add('hidden');
+    }
+    const handler = stepHandlers[step.type];
+    if (handler) handler(step);
+  }
+
+  const stepHandlers = {
+    talk(step) { /* 메시지만 */ },
+
+    ingredients(step) {
+      const wrap = document.createElement('div');
+      wrap.style.cssText = 'display:flex; flex-direction:column; align-items:center; gap:8px; width:100%;';
+
+      const itemsRow = document.createElement('div');
+      itemsRow.style.cssText = 'display:flex; flex-wrap:wrap; gap:4px; justify-content:center;';
+
+      const bowl = document.createElement('div');
+      bowl.className = 'bowl';
+      const bowlContent = document.createElement('div');
+      bowlContent.className = 'bowl-content';
+      bowl.appendChild(bowlContent);
+
+      let dropped = 0;
+      const total = step.items.length;
+
+      step.items.forEach(({ emoji, label }) => {
+        const el = document.createElement('div');
+        el.className = 'ingredient';
+        el.innerHTML = `<span>${emoji}</span><span class="label">${label}</span>`;
+
+        makeDraggable(el, () => [{
+          el: bowl,
+          onDrop() {
+            el.classList.add('consumed');
+            const piece = document.createElement('span');
+            piece.textContent = emoji;
+            bowlContent.appendChild(piece);
+            dropped++;
+            if (dropped < total) {
+              messageEl.textContent = `좋아! ${dropped}/${total} 담았어`;
+            } else {
+              messageEl.textContent = '재료 다 모았다! 짝짝! 👏';
+              setTimeout(nextStep, 1000);
+            }
+          }
+        }]);
+        itemsRow.appendChild(el);
+      });
+
+      wrap.appendChild(itemsRow);
+      wrap.appendChild(bowl);
+      playArea.appendChild(wrap);
+    },
+
+    knead(step) {
+      let count = 0;
+      const dough = document.createElement('div');
+      dough.style.cssText = `
+        width: 140px; height: 140px; border-radius: 50%;
+        background: radial-gradient(circle at 35% 35%, #fff0d4, #f5d99f);
+        box-shadow: inset -8px -8px 0 rgba(0,0,0,0.05);
+        cursor: pointer; transition: transform 0.2s ease, border-radius 0.2s;
+      `;
+      dough.onclick = () => {
+        count++;
+        const scale = 1 - count * 0.05;
+        dough.style.transform = `scale(${scale}, ${1 + count * 0.03})`;
+        messageEl.textContent = `조물조물! ${count}/${step.target}`;
+        if (count >= step.target) setTimeout(nextStep, 500);
+      };
+      playArea.appendChild(dough);
+    },
+
+    roll(step) {
+      let count = 0;
+      const dough = document.createElement('div');
+      dough.style.cssText = `
+        width: 140px; height: 140px; border-radius: 50%;
+        background: radial-gradient(circle at 35% 35%, #fff0d4, #f5d99f);
+        box-shadow: inset -8px -8px 0 rgba(0,0,0,0.05);
+        cursor: pointer; transition: transform 0.2s ease, border-radius 0.2s;
+        transform: scaleY(0.85);
+      `;
+      dough.onclick = () => {
+        count++;
+        const flatten = 0.85 - count * 0.1;
+        dough.style.transform = `scaleY(${flatten}) scaleX(${1 + count * 0.08})`;
+        dough.style.borderRadius = `${50 - count * 8}%`;
+        messageEl.textContent = `밀어밀어! ${count}/${step.target}`;
+        if (count >= step.target) setTimeout(nextStep, 500);
+      };
+      playArea.appendChild(dough);
+    },
+
+    stove_in(step) {
+      const wrap = document.createElement('div');
+      wrap.style.cssText = "display:flex; gap:30px; align-items:center; flex-wrap:wrap; justify-content:center;";
+
+      const bread = document.createElement('div');
+      bread.className = 'bread';
+      bread.textContent = '🍞';
+
+      const stove = document.createElement('div');
+      stove.className = 'stove';
+      stove.innerHTML = '<div class="burner"></div>';
+
+      makeDraggable(bread, () => [{
+        el: stove,
+        onDrop() {
+          bread.classList.add('consumed');
+          stove.querySelector('.burner').textContent = '🍞';
+          setTimeout(nextStep, 500);
+        }
+      }]);
+
+      wrap.appendChild(bread);
+      wrap.appendChild(stove);
+      playArea.appendChild(wrap);
+    },
+
+    cook(step) {
+      const stove = document.createElement('div');
+      stove.className = 'stove on';
+      stove.innerHTML = '<div class="burner">🍞</div>';
+      playArea.appendChild(stove);
+      let dots = 0;
+      const interval = setInterval(() => {
+        dots = (dots + 1) % 4;
+        messageEl.textContent = "맛있게 구워지는 중" + ".".repeat(dots) + " 🔥";
+      }, 400);
+      setTimeout(() => {
+        clearInterval(interval);
+        stove.querySelector('.burner').textContent = '🥖';
+        nextStep();
+      }, step.duration);
+    },
+
+    lid_open(step) {
+      const stove = document.createElement('div');
+      stove.className = 'stove';
+      stove.innerHTML = '<div class="lid"></div><div class="burner">🥖</div>';
+      const lid = stove.querySelector('.lid');
+      lid.onclick = () => { lid.classList.add('open'); setTimeout(nextStep, 700); };
+      playArea.appendChild(stove);
+    },
+
+    take_out(step) {
+      const bread = document.createElement('div');
+      bread.className = 'bread';
+      bread.textContent = '🥖';
+      bread.onclick = () => {
+        bread.style.transition = "all 0.5s ease";
+        bread.style.transform = "translateY(-100px) scale(1.4)";
+        setTimeout(nextStep, 500);
+      };
+      playArea.appendChild(bread);
+    },
+
+    jam(step) {
+      // 캔버스에 빵을 직접 그리고, 그 위에서만 잼이 발라지도록 (source-atop)
+      const wrap = document.createElement('div');
+      wrap.className = 'jam-area';
+      const canvas = document.createElement('canvas');
+      const W = 360, H = 220;
+      canvas.width = W; canvas.height = H;
+      wrap.appendChild(canvas);
+      playArea.appendChild(wrap);
+      const ctx = canvas.getContext('2d');
+
+      // 빵 모양 path (둥근 직사각형, 살짝 타원형)
+      function breadPath() {
+        const padX = 40, padY = 40;
+        const x = padX, y = padY;
+        const w = W - padX * 2, h = H - padY * 2;
+        const r = Math.min(w, h) / 2; // 양쪽 반원
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.arc(x + w - r, y + h/2, h/2, -Math.PI/2, Math.PI/2);
+        ctx.lineTo(x + r, y + h);
+        ctx.arc(x + r, y + h/2, h/2, Math.PI/2, -Math.PI/2);
+        ctx.closePath();
+      }
+
+      // 빵 그리기
+      function drawBread() {
+        // 그림자
+        ctx.save();
+        breadPath();
+        ctx.fillStyle = 'rgba(0,0,0,0.12)';
+        ctx.translate(0, 6);
+        ctx.fill();
+        ctx.restore();
+
+        // 본체 (베이지/갈색 그라디언트)
+        breadPath();
+        const grad = ctx.createLinearGradient(0, 40, 0, H - 40);
+        grad.addColorStop(0,    '#f5d59a');
+        grad.addColorStop(0.5,  '#e0a965');
+        grad.addColorStop(1,    '#b87a3f');
+        ctx.fillStyle = grad;
+        ctx.fill();
+
+        // 위쪽 하이라이트
+        ctx.save();
+        breadPath();
+        ctx.clip();
+        const hi = ctx.createLinearGradient(0, 40, 0, 100);
+        hi.addColorStop(0,   'rgba(255,240,200,0.55)');
+        hi.addColorStop(1,   'rgba(255,240,200,0)');
+        ctx.fillStyle = hi;
+        ctx.fillRect(0, 40, W, 60);
+
+        // 빵 줄무늬 (대각선 칼집)
+        ctx.strokeStyle = 'rgba(120, 70, 30, 0.35)';
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+        for (let i = -1; i <= 1; i++) {
+          ctx.beginPath();
+          const cx = W/2 + i*55;
+          ctx.moveTo(cx - 14, 75);
+          ctx.lineTo(cx + 14, 145);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      drawBread();
+
+      // 잼 칠하기 (빵 위에서만 — globalCompositeOperation: 'source-atop')
+      let painting = false;
+      let lastX = 0, lastY = 0;
+      let jamPixelCount = 0;
+      let breadPixelCount = 0;
+      let finished = false;
+
+      // 빵 픽셀 수 측정 (잼 진행률 계산용)
+      {
+        const data = ctx.getImageData(0, 0, W, H).data;
+        for (let i = 3; i < data.length; i += 4) {
+          if (data[i] > 100) breadPixelCount++;
+        }
+      }
+
+      function paintBlob(x, y, r) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'source-atop'; // 빵 위에서만 그려짐
+        // 진한 핑크 잼 (radial gradient로 가장자리 부드럽게)
+        const g = ctx.createRadialGradient(x - r*0.2, y - r*0.2, 0, x, y, r);
+        g.addColorStop(0,   'rgba(255, 90, 130, 0.85)');
+        g.addColorStop(0.6, 'rgba(220, 50, 100, 0.75)');
+        g.addColorStop(1,   'rgba(180, 30, 80, 0)');
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 광택 점 (가끔)
+        if (Math.random() < 0.45) {
+          ctx.fillStyle = 'rgba(255, 220, 230, 0.55)';
+          ctx.beginPath();
+          ctx.arc(x - r*0.35 + (Math.random()-0.5)*6, y - r*0.35 + (Math.random()-0.5)*6,
+                  1.5 + Math.random()*2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const sx = canvas.width  / rect.width;
+        const sy = canvas.height / rect.height;
+        return {
+          x: (e.clientX - rect.left) * sx,
+          y: (e.clientY - rect.top)  * sy
+        };
+      }
+
+      function paintLine(x0, y0, x1, y1) {
+        const dx = x1 - x0, dy = y1 - y0;
+        const dist = Math.hypot(dx, dy);
+        const step = 4;
+        const n = Math.max(1, Math.ceil(dist / step));
+        for (let i = 0; i <= n; i++) {
+          const t = i / n;
+          paintBlob(x0 + dx*t, y0 + dy*t, 22);
+        }
+      }
+
+      function checkProgress() {
+        // 빵 색이 잼 색으로 덮인 비율
+        const data = ctx.getImageData(0, 0, W, H).data;
+        let jam = 0;
+        for (let i = 0; i < data.length; i += 4) {
+          const a = data[i+3];
+          if (a < 100) continue;
+          const r = data[i], g = data[i+1], b = data[i+2];
+          // 잼 색: 빨강 우세, 초록 작음
+          if (r > 180 && g < 130 && r > g + 50) jam++;
+        }
+        return breadPixelCount > 0 ? jam / breadPixelCount : 0;
+      }
+
+      function onDown(e) {
+        e.preventDefault();
+        if (finished) return;
+        painting = true;
+        const { x, y } = getPos(e);
+        lastX = x; lastY = y;
+        paintBlob(x, y, 22);
+      }
+      function onMove(e) {
+        if (!painting) return;
+        e.preventDefault();
+        const { x, y } = getPos(e);
+        paintLine(lastX, lastY, x, y);
+        lastX = x; lastY = y;
+        if (Math.random() < 0.15) {
+          const ratio = checkProgress();
+          if (ratio >= step.target) {
+            finished = true;
+            painting = false;
+            messageEl.textContent = "잼이 듬뿍! 맛있겠다 😋";
+            setTimeout(nextStep, 800);
+          }
+        }
+      }
+      function onUp() { painting = false; }
+
+      canvas.addEventListener('pointerdown', onDown);
+      canvas.addEventListener('pointermove', onMove);
+      canvas.addEventListener('pointerup', onUp);
+      canvas.addEventListener('pointercancel', onUp);
+      canvas.addEventListener('pointerleave', onUp);
+    },
+
+    finale(step) {
+      const div = document.createElement('div');
+      div.className = 'finale';
+      const img = document.createElement('img');
+      img.src = currentRecipe.finalImage;
+      img.alt = currentRecipe.name;
+      img.onerror = () => {
+        img.remove();
+        const ph = document.createElement('div');
+        ph.className = 'placeholder-cake';
+        ph.textContent = '🍰';
+        div.insertBefore(ph, div.firstChild);
+      };
+      div.appendChild(img);
+      const sparkles = document.createElement('div');
+      sparkles.className = 'sparkles';
+      sparkles.textContent = '✨ 🌟 ✨';
+      div.appendChild(sparkles);
+      playArea.appendChild(div);
+      progress.style.width = "100%";
+    }
+  };
+
+  init();
+  </script>
+</body>
+</html>
