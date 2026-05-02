@@ -85,6 +85,9 @@
   margin-top: 12px;
   overflow: hidden;
 }
+.bowlImageWrapMilk {
+  background-image: url('/assets/bowl-milk.png');
+}
 .bowlContentImg {
   width: 38px;
   height: 38px;
@@ -167,10 +170,7 @@
   position: relative;
   width: clamp(220px, 60vw, 290px);
   height: clamp(220px, 60vw, 290px);
-  border-radius: 50%;
-  background: radial-gradient(circle at 38% 35%, #ccc0b4, #928070);
-  box-shadow: inset 0 -14px 28px rgba(0,0,0,0.25), 0 8px 0 #6a6058;
-  overflow: hidden;
+  background: url('/assets/whisk-bowl.png') center/contain no-repeat;
   cursor: none;
   touch-action: none;
   user-select: none;
@@ -294,7 +294,7 @@
 .doughImg {
   width: 180px;
   height: 160px;
-  background: url('/assets/kneading-dough.png') center/contain no-repeat;
+  background: url('/assets/dough.png') center/contain no-repeat;
   cursor: pointer;
   transition: transform 0.2s ease;
   filter: drop-shadow(0 6px 8px rgba(0,0,0,0.18));
