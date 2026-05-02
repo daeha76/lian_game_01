@@ -77,13 +77,22 @@ export default function Game() {
     setMessage(r.steps[ni].message);
   }, [goToStart]);
 
+  const prev = useCallback(() => {
+    const { recipe: r, stepIndex: i } = stateRef.current;
+    if (!r || i <= 0) return;
+    const ni = i - 1;
+    setStepIndex(ni);
+    setMessage(r.steps[ni].message);
+  }, []);
+
   const showStart = !recipe;
   const currentStep: Step | undefined = recipe?.steps[stepIndex];
   const stepBtn = currentStep?.button;
   const percent = recipe ? (stepIndex / recipe.steps.length) * 100 : 0;
   const isLastStep = recipe != null && stepIndex === recipe.steps.length - 1;
+  const isFirstStep = stepIndex === 0;
 
-  function handleButton() {
+  function handleNext() {
     if (isLastStep) goToStart();
     else next();
   }
@@ -117,24 +126,30 @@ export default function Game() {
             />
           ) : null}
         </div>
-        {!showStart && stepBtn && (
-          <button className={styles.bigBtn} onClick={handleButton}>
-            {stepBtn}
-          </button>
-        )}
-        {!showStart && (
-          <button
-            className={styles.resetBtn}
-            onClick={goToStart}
-            aria-label="처음으로 돌아가기"
-          >
-            ↺ 처음으로
-          </button>
-        )}
       </main>
       <div className={styles.progress}>
         <div className={styles.progressFill} style={{ width: `${percent}%` }} />
       </div>
+      {!showStart && (
+        <nav className={styles.navBar}>
+          <button
+            className={styles.navBtn}
+            onClick={prev}
+            disabled={isFirstStep}
+          >
+            ◀ 이전
+          </button>
+          <button
+            className={`${styles.navBtn} ${styles.navHome}`}
+            onClick={goToStart}
+          >
+            🏠 홈
+          </button>
+          <button className={styles.navBtn} onClick={handleNext}>
+            {stepBtn ?? "다음"} ▶
+          </button>
+        </nav>
+      )}
     </div>
   );
 }
