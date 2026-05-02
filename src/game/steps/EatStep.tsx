@@ -30,7 +30,9 @@ export default function EatStep({ step, recipe, onComplete, setMessage }: StepPr
   const [chomping, setChomping] = useState(false);
 
   const isDone = bites >= step.bites;
-  const breadScale = Math.max(0.25, 1 - bites / step.bites);
+  const isMacaron = recipe.category === "macaron";
+  // 마카롱은 매번 새 마카롱 1개씩 — 쪼그라들지 않음. 그 외는 한 덩어리를 베어 무니 점점 작아짐.
+  const breadScale = isMacaron ? 1 : Math.max(0.25, 1 - bites / step.bites);
 
   useEffect(() => {
     if (bites === 0) return;
@@ -44,16 +46,34 @@ export default function EatStep({ step, recipe, onComplete, setMessage }: StepPr
     };
   }, [bites, step.bites, onComplete, setMessage]);
 
+  const remaining = step.bites - bites;
+
   return (
     <div className={styles.eatLayout}>
       {!isDone && (
-        <Bread
-          key={bites}
-          recipe={recipe}
-          characterRef={characterRef}
-          scale={breadScale}
-          onEaten={() => setBites((prev) => prev + 1)}
-        />
+        isMacaron ? (
+          <div className={styles.macaronTrio}>
+            {Array.from({ length: remaining }).map((_, i) => (
+              <Bread
+                key={`${bites}-${i}`}
+                recipe={recipe}
+                characterRef={characterRef}
+                scale={breadScale}
+                showJam={false}
+                onEaten={() => setBites((prev) => prev + 1)}
+              />
+            ))}
+          </div>
+        ) : (
+          <Bread
+            key={bites}
+            recipe={recipe}
+            characterRef={characterRef}
+            scale={breadScale}
+            showJam={true}
+            onEaten={() => setBites((prev) => prev + 1)}
+          />
+        )
       )}
       <div ref={characterRef} className={`${styles.character} ${chomping ? styles.chomping : ""}`}>
         <span className={styles.characterFace}>
@@ -68,11 +88,13 @@ function Bread({
   recipe,
   characterRef,
   scale,
+  showJam,
   onEaten,
 }: {
   recipe: Recipe;
   characterRef: React.RefObject<HTMLDivElement | null>;
   scale: number;
+  showJam: boolean;
   onEaten: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -86,7 +108,7 @@ function Bread({
     <div ref={ref} className={styles.jamBread} style={{ transform: `scale(${scale})` }}>
       <div className={styles.jamBreadInner}>
         <CookedFood recipe={recipe} />
-        <span className={styles.jamOverlay} style={{ background: overlayBg }} />
+        {showJam && <span className={styles.jamOverlay} style={{ background: overlayBg }} />}
       </div>
     </div>
   );

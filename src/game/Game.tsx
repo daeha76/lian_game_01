@@ -32,11 +32,13 @@ import WhiskStep from "./steps/WhiskStep";
 import PourStep from "./steps/PourStep";
 import DoughStep from "./steps/DoughStep";
 import PrepStep from "./steps/PrepStep";
+import PipeStep from "./steps/PipeStep";
 import ApplianceInStep from "./steps/ApplianceInStep";
 import ApplianceRunStep from "./steps/ApplianceRunStep";
 import ApplianceOpenStep from "./steps/ApplianceOpenStep";
 import TakeOutStep from "./steps/TakeOutStep";
 import SpreadStep from "./steps/SpreadStep";
+import MacaronSandwichStep from "./steps/MacaronSandwichStep";
 import EatStep from "./steps/EatStep";
 import FinaleStep from "./steps/FinaleStep";
 
@@ -196,11 +198,13 @@ function StepRenderer({
     case "knead":
     case "roll":             return <DoughStep            key={key} step={step} {...props} />;
     case "prep":             return <PrepStep             key={key} step={step} {...props} />;
+    case "pipe":             return <PipeStep             key={key} step={step} {...props} />;
     case "appliance_in":     return <ApplianceInStep      key={key} step={step} {...props} />;
     case "appliance_run":    return <ApplianceRunStep     key={key} step={step} {...props} />;
     case "appliance_open":   return <ApplianceOpenStep    key={key} step={step} {...props} />;
     case "take_out":         return <TakeOutStep          key={key} step={step} {...props} />;
     case "spread":           return <SpreadStep           key={key} step={step} {...props} />;
+    case "macaron_sandwich": return <MacaronSandwichStep  key={key} step={step} {...props} />;
     case "eat":              return <EatStep              key={key} step={step} {...props} />;
     case "finale":           return <FinaleStep           key={key} step={step} {...props} />;
   }

@@ -280,6 +280,67 @@
   filter: drop-shadow(0 6px 8px rgba(0,0,0,0.18));
 }
 
+.coloredDough {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-radius 0.2s;
+}
+
+/* === 짜기 (마카롱) === */
+.pipeLayout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.pipingBag {
+  width: 90px;
+  height: 110px;
+  border-radius: 50% 50% 30% 30% / 60% 60% 40% 40%;
+  border: 3px solid;
+  cursor: pointer;
+  position: relative;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+  transition: transform 0.12s ease;
+  user-select: none;
+}
+.pipingBag:active {
+  transform: translateY(3px) scale(0.95);
+}
+.pipingBagTip {
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-top-width: 18px;
+  border-top-style: solid;
+}
+.pipeTray {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  padding: 16px 18px;
+  background: linear-gradient(180deg, #e8d5b0 0%, #c8a875 100%);
+  border-radius: 14px;
+  border: 3px solid #8a6a40;
+  box-shadow: 0 6px 0 #6a4d28, inset 0 -4px 0 rgba(0,0,0,0.15);
+}
+.pipeSlot {
+  width: 56px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.06);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+  animation: popIn 0.35s ease;
+}
+
 /* === 가스레인지 === */
 .stoveLayout {
   display: flex;
@@ -655,6 +716,43 @@
   touch-action: none;
 }
 
+/* === 마카롱 샌드위치 === */
+.sandwichLayout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+}
+.sandwichPair {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 10px;
+  transition: transform 0.12s ease, background 0.2s ease;
+}
+.sandwichPair:hover { background: rgba(255,255,255,0.4); }
+.sandwichPair:active { transform: scale(0.95); }
+.sandwichCream {
+  width: 64px;
+  height: 8px;
+  background: linear-gradient(180deg, #fff5e0 0%, #f0d8a8 100%);
+  border-radius: 3px;
+  margin: 1px 0;
+  transform-origin: center;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+.sandwichDone {
+  font-size: 80px;
+  line-height: 1;
+  animation: popIn 0.5s ease;
+  padding: 6px;
+}
+
 /* === 먹기 === */
 .eatLayout {
   display: flex;
@@ -672,6 +770,17 @@
   cursor: grab;
   transition: transform 0.3s ease;
   line-height: 1;
+}
+
+.macaronTrio {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+.macaronTrio .jamBread {
+  font-size: clamp(54px, 12vw, 80px);
 }
 
 .jamBreadInner {
