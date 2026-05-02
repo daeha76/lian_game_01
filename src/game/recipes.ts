@@ -128,8 +128,8 @@ const makeMacaronRecipes = (): Recipe[] => {
     name,
     category: "macaron",
     finalImage: `/assets/${id.replace(/_/g, "-")}.png`,
-    rawEmoji: "🥚",
-    cookedEmoji: "🎀",
+    rawEmoji: "🥞",
+    cookedEmoji: "🍪",
     spreadColor: color,
     steps: [
       { type: "talk", message: `오늘은 ${name}을 만들어 볼까? ${fruitEmoji}🎀`, button: "알았어!" },

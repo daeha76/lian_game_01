@@ -80,20 +80,7 @@ export default function WhiskStep({ step, onComplete, setMessage }: StepProps<WS
   return (
     <div className={styles.whiskLayout}>
       <div ref={bowlRef} className={styles.whiskBowl}>
-        {/* Batter — gets smoother and brighter as stirred */}
-        <div
-          className={styles.batter}
-          style={{
-            background: `radial-gradient(circle at ${30 + ratio * 20}% ${40 + ratio * 10}%,
-              #ffe8b0 0%, #f5c860 ${40 + ratio * 20}%, #e0a840 100%)`,
-            filter: `blur(${(1 - ratio) * 2.5}px)`,
-          }}
-        />
-        {/* Foam layer that appears after halfway */}
-        {ratio > 0.3 && (
-          <div className={styles.foam} style={{ opacity: Math.min((ratio - 0.3) * 2, 0.7) }} />
-        )}
-        {/* Bubbles — appear progressively */}
+        {/* 진행도에 맞춰 거품만 작게 표시 — 볼 이미지는 가리지 않음 */}
         {BUBBLE_SPOTS.slice(0, numBubbles).map((b, i) => (
           <div
             key={i}
