@@ -294,7 +294,7 @@
 .doughImg {
   width: 180px;
   height: 160px;
-  background: url('/assets/dough.png') center/contain no-repeat;
+  background: url('/assets/kneading-dough.png') center/contain no-repeat;
   cursor: pointer;
   transition: transform 0.2s ease;
   filter: drop-shadow(0 6px 8px rgba(0,0,0,0.18));
