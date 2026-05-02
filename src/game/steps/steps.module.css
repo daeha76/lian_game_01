@@ -141,6 +141,14 @@
   line-height: 1;
   animation: eggBreakAnim 0.55s ease;
 }
+.eggVideo {
+  max-width: min(80vw, 420px);
+  max-height: 50vh;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  animation: eggBreakAnim 0.55s ease;
+  background: #000;
+}
 @keyframes eggBreakAnim {
   0%   { transform: scale(1)    rotate(0deg); }
   30%  { transform: scale(1.3)  rotate(-12deg); }
