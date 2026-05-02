@@ -145,8 +145,8 @@
   animation: eggBreakAnim 0.55s ease;
 }
 .eggVideo {
-  max-width: min(80vw, 420px);
-  max-height: 50vh;
+  max-width: min(72vw, 360px);
+  max-height: 38vh;
   border-radius: 18px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
   animation: eggBreakAnim 0.55s ease;
@@ -154,7 +154,9 @@
 }
 .eggArea {
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
+  max-height: 100%;
+  padding: 12px;
 }
 .retryBtn {
   font-family: inherit;
@@ -165,9 +167,12 @@
   border: none;
   border-radius: 26px;
   padding: 14px 28px;
+  flex-shrink: 0;
   box-shadow: 0 5px 0 #d6457f, 0 6px 12px rgba(0,0,0,0.15);
   cursor: pointer;
   transition: transform 0.1s, box-shadow 0.1s;
+  position: relative;
+  z-index: 2;
 }
 .retryBtn:active {
   transform: translateY(3px);
