@@ -145,12 +145,38 @@
   animation: eggBreakAnim 0.55s ease;
 }
 .eggVideo {
-  max-width: min(80vw, 420px);
-  max-height: 50vh;
+  max-width: min(72vw, 360px);
+  max-height: 38vh;
   border-radius: 18px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
   animation: eggBreakAnim 0.55s ease;
   background: #000;
+}
+.eggArea {
+  flex-direction: column;
+  gap: 14px;
+  max-height: 100%;
+  padding: 12px;
+}
+.retryBtn {
+  font-family: inherit;
+  font-size: clamp(18px, 4.5vw, 24px);
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(180deg, #ffa8c8 0%, #ff5d92 100%);
+  border: none;
+  border-radius: 26px;
+  padding: 14px 28px;
+  flex-shrink: 0;
+  box-shadow: 0 5px 0 #d6457f, 0 6px 12px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+  position: relative;
+  z-index: 2;
+}
+.retryBtn:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #d6457f, 0 3px 6px rgba(0,0,0,0.15);
 }
 @keyframes eggBreakAnim {
   0%   { transform: scale(1)    rotate(0deg); }
