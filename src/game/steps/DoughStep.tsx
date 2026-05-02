@@ -28,5 +28,5 @@ export default function DoughStep({ step, onComplete, setMessage }: StepProps<Kn
       }
     : { transform: `scale(${1 - count * 0.05}, ${1 + count * 0.03})` };
 
-  return <div className={styles.dough} style={style} onClick={handle} />;
+  return <div className={styles.doughImg} style={style} onClick={handle} />;
 }

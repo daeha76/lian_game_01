@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { EMOJI_IMAGES } from "../images";
 import type { PourStep as PS, StepProps } from "../types";
 import styles from "./steps.module.css";
 
@@ -46,7 +47,12 @@ export default function PourStep({ step, onComplete, setMessage }: StepProps<PS>
         onClick={handle}
         role="button"
       >
-        {step.emoji}
+        {EMOJI_IMAGES[step.emoji] ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={EMOJI_IMAGES[step.emoji]} alt={step.label} className={styles.pourIngredientImg} />
+        ) : (
+          step.emoji
+        )}
       </div>
 
       {/* Stream between ingredient and bowl */}
@@ -60,7 +66,7 @@ export default function PourStep({ step, onComplete, setMessage }: StepProps<PS>
       </div>
 
       {/* Bowl with rising fill */}
-      <div className={styles.bowl}>
+      <div className={styles.bowlImageWrap}>
         <div
           className={styles.pourFill}
           style={{ height: `${fillPct}%`, background: fillColor }}
