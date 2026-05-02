@@ -99,6 +99,28 @@
   box-shadow: 0 2px 0 var(--theme-dark), 0 4px 8px rgba(0,0,0,0.15);
 }
 
+.resetBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 5;
+  font-family: inherit;
+  font-size: clamp(13px, 3vw, 16px);
+  font-weight: bold;
+  color: var(--theme-dark);
+  background: white;
+  border: 3px solid var(--theme-light);
+  border-radius: 999px;
+  padding: 6px 14px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--theme-light);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.resetBtn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--theme-light);
+}
+
 .progress {
   width: calc(100% - 32px);
   max-width: 600px;

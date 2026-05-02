@@ -122,6 +122,15 @@ export default function Game() {
             {stepBtn}
           </button>
         )}
+        {!showStart && (
+          <button
+            className={styles.resetBtn}
+            onClick={goToStart}
+            aria-label="처음으로 돌아가기"
+          >
+            ↺ 처음으로
+          </button>
+        )}
       </main>
       <div className={styles.progress}>
         <div className={styles.progressFill} style={{ width: `${percent}%` }} />
