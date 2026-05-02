@@ -111,6 +111,44 @@ const makeIcecreamRecipes = (): Recipe[] => {
   }));
 };
 
+/** 마카롱 레시피 7종 (딸기~포도) — 머랭 만들고 굽고 크림 끼워 샌드 */
+const makeMacaronRecipes = (): Recipe[] => {
+  const fruits: FruitDef[] = [
+    { id: "strawberry_macaron", name: "딸기 마카롱",     fruit: "딸기",     fruitEmoji: "🍓", color: "blush" },
+    { id: "orange_macaron",     name: "오렌지 마카롱",   fruit: "오렌지",   fruitEmoji: "🍊", color: "orange" },
+    { id: "banana_macaron",     name: "바나나 마카롱",   fruit: "바나나",   fruitEmoji: "🍌", color: "yellow" },
+    { id: "melon_macaron",      name: "메론 마카롱",     fruit: "메론",     fruitEmoji: "🍈", color: "green" },
+    { id: "blueberry_macaron",  name: "블루베리 마카롱", fruit: "블루베리", fruitEmoji: "🫐", color: "blue" },
+    { id: "plum_macaron",       name: "자두 마카롱",     fruit: "자두",     fruitEmoji: "🍑", color: "indigo" },
+    { id: "grape_macaron",      name: "포도 마카롱",     fruit: "포도",     fruitEmoji: "🍇", color: "purple" },
+  ];
+
+  return fruits.map<Recipe>(({ id, name, fruit, fruitEmoji, color }) => ({
+    id,
+    name,
+    category: "macaron",
+    finalImage: `/assets/${id.replace(/_/g, "-")}.png`,
+    rawEmoji: "🥚",
+    cookedEmoji: "🎀",
+    spreadColor: color,
+    steps: [
+      { type: "talk", message: `오늘은 ${name}을 만들어 볼까? ${fruitEmoji}🎀`, button: "알았어!" },
+      { type: "crack_egg", message: "달걀 흰자를 탁탁 깨봐! 💥", taps: 3 },
+      { type: "whisk",     message: "흰자를 빙글빙글 저어 머랭 만들기! 🌀", target: 5 },
+      { type: "pour",      message: "아몬드가루를 솔솔~", emoji: "🌰", label: "아몬드가루", taps: 3 },
+      { type: "pour",      message: "슈가파우더도 솔솔~", emoji: "🍚", label: "슈가파우더", taps: 3 },
+      { type: "knead",     message: "조심조심 섞어봐! 마카로나주~ 5번", target: 5 },
+      { type: "appliance_in",   message: "마카롱 반죽을 에어프라이기에 끌어다 놓아봐!", appliance: "air_fryer" },
+      { type: "appliance_run",  message: "에어프라이기로 굽는 중... 💨", duration: 3000, appliance: "air_fryer" },
+      { type: "appliance_open", message: "다 됐다! 문을 열어봐", appliance: "air_fryer" },
+      { type: "take_out",  message: "마카롱을 꺼내자!" },
+      { type: "spread",    message: `${fruit} 크림을 발라봐! 마카롱 사이에 듬뿍~`, color, target: 0.45 },
+      { type: "eat",       message: `친구에게 ${name}을 줘봐! 입에 끌어다 놓으면 냠냠 먹어요`, bites: 3 },
+      { type: "finale",    message: "완성! 정말 잘했어! 🎉", button: "다시 하기" },
+    ],
+  }));
+};
+
 /** 새 레시피는 이 배열에 한 덩어리만 추가하면 됨 */
 export const RECIPES: Recipe[] = [
   // ========================================
@@ -338,6 +376,11 @@ export const RECIPES: Recipe[] = [
   // 사탕 카테고리 (딸기 ~ 포도)
   // ========================================
   ...makeCandyRecipes(),
+
+  // ========================================
+  // 마카롱 카테고리 (딸기 ~ 포도)
+  // ========================================
+  ...makeMacaronRecipes(),
 ];
 
 export function pickRandomRecipe(): Recipe {
