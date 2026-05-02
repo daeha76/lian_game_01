@@ -45,22 +45,27 @@ export default function CrackEggStep({ step, onComplete, setMessage }: StepProps
           onError={onComplete}
         />
       ) : (
-        <svg
-          key={animKey}
-          className={styles.eggSvg}
-          width="140" height="170"
-          viewBox="0 0 120 150"
-        >
-          <ellipse cx="60" cy="88" rx="44" ry="54" fill="#FFF5D0" stroke="#d4b060" strokeWidth="2.5" />
-          <ellipse cx="46" cy="68" rx="9" ry="12" fill="rgba(255,255,255,0.55)" />
+        <div key={animKey} className={styles.eggSvg} style={{ position: "relative", width: 140, height: 170 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/assets/egg.png"
+            alt="달걀"
+            style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
+          />
           {taps > 0 && (
-            <path
-              d={CRACK_PATHS[Math.min(taps, CRACK_PATHS.length - 1)]}
-              stroke="#8a6020" strokeWidth="2"
-              fill="none" strokeLinecap="round" strokeLinejoin="round"
-            />
+            <svg
+              width="140" height="170"
+              viewBox="0 0 120 150"
+              style={{ position: "absolute", top: 0, left: 0, pointerEvents: "none" }}
+            >
+              <path
+                d={CRACK_PATHS[Math.min(taps, CRACK_PATHS.length - 1)]}
+                stroke="#8a6020" strokeWidth="2"
+                fill="none" strokeLinecap="round" strokeLinejoin="round"
+              />
+            </svg>
           )}
-        </svg>
+        </div>
       )}
     </div>
   );

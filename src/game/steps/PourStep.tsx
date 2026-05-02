@@ -66,7 +66,7 @@ export default function PourStep({ step, onComplete, setMessage }: StepProps<PS>
       </div>
 
       {/* Bowl with rising fill */}
-      <div className={styles.bowlImageWrap}>
+      <div className={`${styles.bowlImageWrap} ${isMilk ? styles.bowlImageWrapMilk : ""}`}>
         <div
           className={styles.pourFill}
           style={{ height: `${fillPct}%`, background: fillColor }}
