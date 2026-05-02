@@ -114,6 +114,7 @@ export default function Game() {
           <p className={styles.message}>{message}</p>
         </div>
         <div className={styles.playArea}>
+          {!showStart && <div className={styles.counter} aria-hidden />}
           {showStart ? (
             <RecipeMenu category={category} onChangeCategory={setCategory} onPick={start} />
           ) : currentStep && recipe ? (
