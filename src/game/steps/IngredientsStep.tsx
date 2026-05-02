@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useDraggable } from "../useDrag";
+import { EMOJI_IMAGES } from "../images";
 import type { IngredientsStep as IS, StepProps } from "../types";
 import styles from "./steps.module.css";
 
@@ -35,11 +36,16 @@ export default function IngredientsStep({ step, onComplete, setMessage }: StepPr
           />
         ))}
       </div>
-      <div ref={bowlRef} className={styles.bowl}>
+      <div ref={bowlRef} className={styles.bowlImageWrap}>
         <div className={styles.bowlContent}>
-          {bowlContent.map((emoji, i) => (
-            <span key={i}>{emoji}</span>
-          ))}
+          {bowlContent.map((emoji, i) =>
+            EMOJI_IMAGES[emoji] ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img key={i} src={EMOJI_IMAGES[emoji]} alt="" className={styles.bowlContentImg} />
+            ) : (
+              <span key={i}>{emoji}</span>
+            ),
+          )}
         </div>
       </div>
     </div>
@@ -59,6 +65,7 @@ function Ingredient({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [consumed, setConsumed] = useState(false);
+  const imgSrc = EMOJI_IMAGES[emoji];
 
   useDraggable(
     ref,
@@ -79,7 +86,12 @@ function Ingredient({
 
   return (
     <div ref={ref} className={`${styles.ingredient} ${consumed ? styles.consumed : ""}`}>
-      <span>{emoji}</span>
+      {imgSrc ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={imgSrc} alt={label} className={styles.ingredientImg} />
+      ) : (
+        <span>{emoji}</span>
+      )}
       <span className={styles.label}>{label}</span>
     </div>
   );
