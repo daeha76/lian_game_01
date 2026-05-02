@@ -1,6 +1,6 @@
 export type Appliance = "stove" | "air_fryer" | "blender" | "freezer";
 export type SpreadColor = "pink" | "orange" | "yellow" | "green" | "blue" | "indigo" | "purple" | "blush";
-export type RecipeCategory = "cake" | "milk" | "icecream" | "candy";
+export type RecipeCategory = "cake" | "milk" | "icecream" | "candy" | "macaron";
 export type PrepKind = "wash" | "trim" | "chop";
 
 export type StepType =
