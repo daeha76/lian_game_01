@@ -111,7 +111,7 @@ const makeIcecreamRecipes = (): Recipe[] => {
   }));
 };
 
-/** 마카롱 레시피 7종 (딸기~포도) — 머랭 만들고 굽고 크림 끼워 샌드 */
+/** 마카롱 레시피 7종 (딸기~포도) — 흰자에 아몬드가루+슈가파우더 넣고 섞어 굽고 크림 샌드 */
 const makeMacaronRecipes = (): Recipe[] => {
   const fruits: FruitDef[] = [
     { id: "strawberry_macaron", name: "딸기 마카롱",     fruit: "딸기",     fruitEmoji: "🍓", color: "blush" },
@@ -133,11 +133,10 @@ const makeMacaronRecipes = (): Recipe[] => {
     spreadColor: color,
     steps: [
       { type: "talk", message: `오늘은 ${name}을 만들어 볼까? ${fruitEmoji}🎀`, button: "알았어!" },
-      { type: "crack_egg", message: "달걀 흰자를 탁탁 깨봐! 💥", taps: 3 },
-      { type: "whisk",     message: "흰자를 빙글빙글 저어 머랭 만들기! 🌀", target: 5 },
+      { type: "crack_egg", message: "달걀 흰자를 탁탁 깨봐! 💥 (아직 젓지 마!)", taps: 3 },
       { type: "pour",      message: "아몬드가루를 솔솔~", emoji: "🌰", label: "아몬드가루", taps: 3 },
       { type: "pour",      message: "슈가파우더도 솔솔~", emoji: "🍚", label: "슈가파우더", taps: 3 },
-      { type: "knead",     message: "조심조심 섞어봐! 마카로나주~ 5번", target: 5 },
+      { type: "whisk",     message: "이제 빙글빙글 섞어봐! 마카로나주~ 🌀", target: 5 },
       { type: "appliance_in",   message: "마카롱 반죽을 에어프라이기에 끌어다 놓아봐!", appliance: "air_fryer" },
       { type: "appliance_run",  message: "에어프라이기로 굽는 중... 💨", duration: 3000, appliance: "air_fryer" },
       { type: "appliance_open", message: "다 됐다! 문을 열어봐", appliance: "air_fryer" },
