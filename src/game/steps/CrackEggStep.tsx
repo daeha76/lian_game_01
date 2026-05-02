@@ -21,11 +21,10 @@ export default function CrackEggStep({ step, onComplete, setMessage }: StepProps
     if (taps === 0) return;
     if (done) {
       setMessage("달걀이 깨졌어요! 🍳");
-      const t = setTimeout(onComplete, 900);
-      return () => clearTimeout(t);
+      return;
     }
     setMessage(`탁탁! ${taps}/${step.taps}`);
-  }, [taps, done, step.taps, onComplete, setMessage]);
+  }, [taps, done, step.taps, setMessage]);
 
   function handle() {
     if (done) return;
@@ -36,9 +35,15 @@ export default function CrackEggStep({ step, onComplete, setMessage }: StepProps
   return (
     <div className={styles.eggArea} onClick={handle}>
       {done ? (
-        <div className={styles.eggBroken}>
-          <span>🍳</span>
-        </div>
+        <video
+          className={styles.eggVideo}
+          src="/assets/egg-break.mp4"
+          autoPlay
+          muted
+          playsInline
+          onEnded={onComplete}
+          onError={onComplete}
+        />
       ) : (
         <svg
           key={animKey}
