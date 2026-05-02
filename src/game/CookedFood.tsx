@@ -2,7 +2,7 @@
 
 import type { Recipe, SpreadColor } from "./types";
 
-const SHELL_FILL: Record<SpreadColor, string> = {
+export const SHELL_FILL: Record<SpreadColor, string> = {
   pink:   "#ffa8c8",
   blush:  "#ffd1e0",
   orange: "#ffc880",
@@ -13,7 +13,7 @@ const SHELL_FILL: Record<SpreadColor, string> = {
   purple: "#cc88ee",
 };
 
-const SHELL_EDGE: Record<SpreadColor, string> = {
+export const SHELL_EDGE: Record<SpreadColor, string> = {
   pink:   "#ff5d92",
   blush:  "#ffaacc",
   orange: "#ff8a3d",
@@ -70,6 +70,67 @@ export function MacaronShape({ color = "pink" }: { color?: SpreadColor }) {
       <ellipse cx="40" cy="22" rx="14" ry="5" fill="rgba(255,255,255,0.55)" />
       <ellipse cx="40" cy="60" rx="12" ry="4" fill="rgba(255,255,255,0.4)" />
     </svg>
+  );
+}
+
+/** 한 개 껍질 (안 구운 / 구운 공통) */
+function Shell({
+  color,
+  cooked,
+  size = 28,
+}: {
+  color: SpreadColor;
+  cooked: boolean;
+  size?: number;
+}) {
+  const fill = SHELL_FILL[color];
+  const edge = SHELL_EDGE[color];
+  return (
+    <svg width={size} height={size * 0.55} viewBox="0 0 50 28">
+      <ellipse cx="25" cy="14" rx="22" ry="11" fill={fill} stroke={edge} strokeWidth="1.5" />
+      {cooked && (
+        <g fill={edge} opacity="0.55">
+          <circle cx="8"  cy="22" r="1.6" />
+          <circle cx="15" cy="24" r="1.7" />
+          <circle cx="25" cy="25" r="1.7" />
+          <circle cx="35" cy="24" r="1.7" />
+          <circle cx="42" cy="22" r="1.6" />
+        </g>
+      )}
+      <ellipse cx="18" cy="9" rx="6" ry="2" fill="rgba(255,255,255,0.5)" />
+    </svg>
+  );
+}
+
+/** 쟁반에 마카롱 껍질 N개 (기본 6개). 안 구운 / 구운 모드. */
+export function MacaronTray({
+  color,
+  cooked,
+  count = 6,
+  size = 36,
+}: {
+  color: SpreadColor;
+  cooked: boolean;
+  count?: number;
+  size?: number;
+}) {
+  return (
+    <div
+      style={{
+        display: "inline-grid",
+        gridTemplateColumns: "repeat(3, 1fr)",
+        gap: 6,
+        padding: 8,
+        background: "linear-gradient(180deg, #e8d5b0 0%, #c8a875 100%)",
+        borderRadius: 10,
+        border: "2px solid #8a6a40",
+        boxShadow: "0 4px 0 #6a4d28, inset 0 -3px 0 rgba(0,0,0,0.15)",
+      }}
+    >
+      {Array.from({ length: count }).map((_, i) => (
+        <Shell key={i} color={color} cooked={cooked} size={size} />
+      ))}
+    </div>
   );
 }
 

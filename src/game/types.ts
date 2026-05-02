@@ -12,11 +12,13 @@ export type StepType =
   | "knead"
   | "roll"
   | "prep"
+  | "pipe"
   | "appliance_in"
   | "appliance_run"
   | "appliance_open"
   | "take_out"
   | "spread"
+  | "macaron_sandwich"
   | "eat"
   | "finale";
 
@@ -67,6 +69,19 @@ export interface ApplianceOpenStep extends BaseStep {
 
 export interface TakeOutStep extends BaseStep { type: "take_out"; }
 
+/** 짜기: 쟁반에 동그란 반죽을 N개 짜기 (마카롱) */
+export interface PipeStep extends BaseStep {
+  type: "pipe";
+  count: number;
+}
+
+/** 마카롱 샌드: 6개 껍질에 크림 발라 짝지어 3개 만들기 */
+export interface MacaronSandwichStep extends BaseStep {
+  type: "macaron_sandwich";
+  pairs: number;
+  color: SpreadColor;
+}
+
 export interface SpreadStep extends BaseStep {
   type: "spread";
   color: SpreadColor;
@@ -85,11 +100,13 @@ export type Step =
   | KneadStep
   | RollStep
   | PrepStep
+  | PipeStep
   | ApplianceInStep
   | ApplianceRunStep
   | ApplianceOpenStep
   | TakeOutStep
   | SpreadStep
+  | MacaronSandwichStep
   | EatStep
   | FinaleStep;
 
