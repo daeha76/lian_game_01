@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { ApplianceOpenStep as AOS, StepProps } from "../types";
+import CookedFood from "../CookedFood";
 import styles from "./steps.module.css";
 
 /** 가스레인지 뚜껑 / 에어프라이기 도어 열기 */
@@ -22,7 +23,9 @@ export default function ApplianceOpenStep({ step, recipe, onComplete }: StepProp
           className={`${styles.airFryerDoor} ${open ? styles.airFryerDoorOpen : ""}`}
           onClick={handleClick}
         />
-        <div className={styles.airFryerWindow}>{recipe.cookedEmoji}</div>
+        <div className={styles.airFryerWindow}>
+          <CookedFood recipe={recipe} />
+        </div>
       </div>
     );
   }
@@ -30,7 +33,9 @@ export default function ApplianceOpenStep({ step, recipe, onComplete }: StepProp
   return (
     <div className={styles.stove}>
       <div className={`${styles.lid} ${open ? styles.lidOpen : ""}`} onClick={handleClick} />
-      <div className={styles.burner}>{recipe.cookedEmoji}</div>
+      <div className={styles.burner}>
+        <CookedFood recipe={recipe} />
+      </div>
     </div>
   );
 }

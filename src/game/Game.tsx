@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect, CSSProperties } from "react";
 import { Recipe, Step, SpreadColor, RecipeCategory } from "./types";
 import { RECIPES } from "./recipes";
+import CookedFood from "./CookedFood";
 import styles from "./Game.module.css";
 
 const THEMES: Record<SpreadColor, { dots: string; light: string; main: string; grad: string; dark: string }> = {
@@ -159,7 +160,9 @@ function RecipeMenu({
             className={`${styles.recipeCard} ${styles[`card_${r.spreadColor ?? "pink"}`]}`}
             onClick={() => onPick(r)}
           >
-            <span className={styles.cardEmoji}>{r.cookedEmoji}</span>
+            <span className={styles.cardEmoji}>
+              <CookedFood recipe={r} />
+            </span>
             <span className={styles.cardName}>{r.name}</span>
           </button>
         ))}

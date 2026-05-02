@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, ReactNode } from "react";
 import type { ApplianceRunStep as ARS, StepProps } from "../types";
+import CookedFood from "../CookedFood";
 import styles from "./steps.module.css";
 
 /** 가스레인지/에어프라이기로 굽는 중 / 믹서기로 가는 중 */
@@ -37,7 +38,7 @@ export default function ApplianceRunStep({ step, recipe, onComplete, setMessage 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const food = cooked ? recipe.cookedEmoji : recipe.rawEmoji;
+  const food: ReactNode = cooked ? <CookedFood recipe={recipe} /> : recipe.rawEmoji;
 
   if (isBlender) {
     return (
