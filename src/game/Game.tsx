@@ -20,6 +20,7 @@ const CATEGORIES: { key: RecipeCategory; label: string; emoji: string }[] = [
   { key: "cake",     label: "케잌",       emoji: "🍰" },
   { key: "milk",     label: "우유",       emoji: "🥤" },
   { key: "icecream", label: "아이스크림", emoji: "🍦" },
+  { key: "candy",    label: "사탕",       emoji: "🍬" },
 ];
 
 import TalkStep from "./steps/TalkStep";

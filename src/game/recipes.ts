@@ -42,6 +42,41 @@ const makeMilkRecipes = (): Recipe[] => {
   }));
 };
 
+/** 사탕 레시피 7종 (딸기~포도) — 가스레인지로 끓여서 잘라서 만들기 */
+const makeCandyRecipes = (): Recipe[] => {
+  const fruits: FruitDef[] = [
+    { id: "strawberry_candy", name: "딸기 사탕",     fruit: "딸기",     fruitEmoji: "🍓", color: "blush" },
+    { id: "orange_candy",     name: "오렌지 사탕",   fruit: "오렌지",   fruitEmoji: "🍊", color: "orange" },
+    { id: "banana_candy",     name: "바나나 사탕",   fruit: "바나나",   fruitEmoji: "🍌", color: "yellow" },
+    { id: "melon_candy",      name: "메론 사탕",     fruit: "메론",     fruitEmoji: "🍈", color: "green" },
+    { id: "blueberry_candy",  name: "블루베리 사탕", fruit: "블루베리", fruitEmoji: "🫐", color: "blue" },
+    { id: "plum_candy",       name: "자두 사탕",     fruit: "자두",     fruitEmoji: "🍑", color: "indigo" },
+    { id: "grape_candy",      name: "포도 사탕",     fruit: "포도",     fruitEmoji: "🍇", color: "purple" },
+  ];
+
+  return fruits.map<Recipe>(({ id, name, fruit, fruitEmoji, color }) => ({
+    id,
+    name,
+    category: "candy",
+    finalImage: `/assets/${id.replace(/_/g, "-")}.png`,
+    rawEmoji: "🥣",
+    cookedEmoji: "🍬",
+    spreadColor: color,
+    steps: [
+      { type: "talk", message: `오늘은 ${name}을 만들어 볼까? ${fruitEmoji}🍬`, button: "알았어!" },
+      { type: "pour",  message: "설탕을 부어봐! 솔솔~", emoji: "🍚", label: "설탕", taps: 3 },
+      { type: "pour",  message: `${fruit}즙을 부어봐! 촤르르~`, emoji: fruitEmoji, label: `${fruit}즙`, taps: 3 },
+      { type: "whisk", message: "빙글빙글 녹여봐! 세 바퀴~", target: 3 },
+      { type: "appliance_in",  message: "냄비를 가스레인지에 끌어다 놓아봐!", appliance: "stove" },
+      { type: "appliance_run", message: "보글보글 끓이는 중... 🔥", duration: 3000, appliance: "stove" },
+      { type: "take_out", message: "사탕을 꺼내서 식히자!" },
+      { type: "prep", kind: "chop", emoji: "🍬", message: "사탕을 모양대로 잘라봐! 🔪✂️", target: 4 },
+      { type: "eat", message: `친구에게 ${name}을 줘봐! 입에 끌어다 놓으면 냠냠 먹어요`, bites: 3 },
+      { type: "finale", message: "완성! 정말 잘했어! 🎉", button: "다시 하기" },
+    ],
+  }));
+};
+
 /** 아이스크림 레시피 7종 (딸기~포도) — 모두 같은 7-스텝 흐름 */
 const makeIcecreamRecipes = (): Recipe[] => {
   const fruits: FruitDef[] = [
@@ -298,6 +333,11 @@ export const RECIPES: Recipe[] = [
   // 아이스크림 카테고리 (딸기 ~ 포도)
   // ========================================
   ...makeIcecreamRecipes(),
+
+  // ========================================
+  // 사탕 카테고리 (딸기 ~ 포도)
+  // ========================================
+  ...makeCandyRecipes(),
 ];
 
 export function pickRandomRecipe(): Recipe {
