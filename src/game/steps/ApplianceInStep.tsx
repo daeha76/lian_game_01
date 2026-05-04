@@ -2,6 +2,7 @@
 
 import { useRef, useState, ReactNode } from "react";
 import { useDraggable } from "../useDrag";
+import { EMOJI_IMAGES } from "../images";
 import type { ApplianceInStep as AIS, StepProps } from "../types";
 import { MacaronTray } from "../CookedFood";
 import styles from "./steps.module.css";
@@ -34,11 +35,19 @@ export default function ApplianceInStep({ step, recipe, onComplete }: StepProps<
     !consumed,
   );
 
+  const fruitSrc = EMOJI_IMAGES[recipe.rawEmoji];
+  const fruitView: ReactNode = fruitSrc ? (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={fruitSrc} alt="" className={styles.breadImg} />
+  ) : (
+    recipe.rawEmoji
+  );
+
   const draggable: ReactNode = isMacaron
     ? <MacaronTray color={color} cooked={false} size={26} />
-    : recipe.rawEmoji;
+    : fruitView;
   const insideView: ReactNode = inside
-    ? (isMacaron ? <MacaronTray color={color} cooked={false} size={20} /> : recipe.rawEmoji)
+    ? (isMacaron ? <MacaronTray color={color} cooked={false} size={20} /> : fruitView)
     : "";
 
   return (
@@ -52,10 +61,9 @@ export default function ApplianceInStep({ step, recipe, onComplete }: StepProps<
         </div>
       ) : step.appliance === "blender" ? (
         <div ref={applianceRef} className={styles.blender}>
-          <div className={styles.blenderJar}>
-            <div className={styles.blenderContent}>{insideView}</div>
-          </div>
-          <div className={styles.blenderBase} />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/assets/blender.png" alt="믹서기" className={styles.blenderImg} />
+          <div className={styles.blenderContent}>{insideView}</div>
         </div>
       ) : step.appliance === "freezer" ? (
         <div ref={applianceRef} className={styles.freezer}>
