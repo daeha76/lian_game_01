@@ -482,6 +482,7 @@
   width: clamp(120px, 32vw, 160px);
   aspect-ratio: 511 / 1015;
   position: relative;
+  perspective: 600px;
 }
 .blenderImg {
   position: absolute;
@@ -539,8 +540,8 @@
   to   { transform: translateX(1.5px)  rotate(0.4deg);  }
 }
 @keyframes blenderSpin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(360deg); }
 }
 
 /* === 냉동실 === */
