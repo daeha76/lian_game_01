@@ -3,6 +3,7 @@
 import { useEffect, useState, ReactNode } from "react";
 import type { ApplianceRunStep as ARS, StepProps } from "../types";
 import CookedFood, { MacaronTray } from "../CookedFood";
+import { EMOJI_IMAGES } from "../images";
 import styles from "./steps.module.css";
 
 /** 가스레인지/에어프라이기로 굽는 중 / 믹서기로 가는 중 */
@@ -40,17 +41,23 @@ export default function ApplianceRunStep({ step, recipe, onComplete, setMessage 
 
   const isMacaron = recipe.category === "macaron";
   const color = recipe.spreadColor ?? "pink";
+  const fruitSrc = EMOJI_IMAGES[recipe.rawEmoji];
+  const rawFruit: ReactNode = fruitSrc ? (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={fruitSrc} alt="" />
+  ) : (
+    recipe.rawEmoji
+  );
   const food: ReactNode = isMacaron
     ? <MacaronTray color={color} cooked={cooked} size={20} />
-    : (cooked ? <CookedFood recipe={recipe} /> : recipe.rawEmoji);
+    : (cooked ? <CookedFood recipe={recipe} /> : rawFruit);
 
   if (isBlender) {
     return (
       <div className={`${styles.blender} ${styles.blenderOn}`}>
-        <div className={styles.blenderJar}>
-          <div className={styles.blenderContent}>{food}</div>
-        </div>
-        <div className={styles.blenderBase} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/assets/blender.png" alt="믹서기" className={styles.blenderImg} />
+        <div className={styles.blenderContent}>{food}</div>
       </div>
     );
   }
