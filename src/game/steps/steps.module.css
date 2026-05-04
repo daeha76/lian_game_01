@@ -512,6 +512,22 @@
   max-height: 80%;
   object-fit: contain;
 }
+.blenderFill {
+  position: absolute;
+  top: 14%;
+  left: 26%;
+  right: 26%;
+  bottom: 50%;
+  overflow: hidden;
+  border-radius: 0 0 8px 8px;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+}
+.blenderFillLevel {
+  width: 100%;
+  transition: height 0.4s ease;
+}
 .blenderOn {
   animation: blenderShake 0.18s infinite alternate;
 }

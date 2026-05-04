@@ -5,7 +5,7 @@ import { EMOJI_IMAGES } from "../images";
 import type { PourStep as PS, StepProps } from "../types";
 import styles from "./steps.module.css";
 
-export default function PourStep({ step, onComplete, setMessage }: StepProps<PS>) {
+export default function PourStep({ step, recipe, onComplete, setMessage }: StepProps<PS>) {
   const [taps, setTaps] = useState(0);
   const [animKey, setAnimKey] = useState(0);
   const [streaming, setStreaming] = useState(false);
@@ -30,7 +30,8 @@ export default function PourStep({ step, onComplete, setMessage }: StepProps<PS>
   }
 
   const isMilk = step.emoji === "🥛";
-  const fillPct = (taps / step.taps) * 68;
+  const isBlender = recipe.category === "milk";
+  const fillPct = (taps / step.taps) * (isBlender ? 100 : 68);
   const fillColor = isMilk
     ? "rgba(240, 248, 255, 0.7)"
     : "rgba(255, 248, 210, 0.72)";
@@ -55,7 +56,7 @@ export default function PourStep({ step, onComplete, setMessage }: StepProps<PS>
         )}
       </div>
 
-      {/* Stream between ingredient and bowl */}
+      {/* Stream between ingredient and target */}
       <div className={styles.pourStreamWrap}>
         {streaming && (
           <div
@@ -65,13 +66,26 @@ export default function PourStep({ step, onComplete, setMessage }: StepProps<PS>
         )}
       </div>
 
-      {/* Bowl with rising fill */}
-      <div className={`${styles.bowlImageWrap} ${isMilk ? styles.bowlImageWrapMilk : ""}`}>
-        <div
-          className={styles.pourFill}
-          style={{ height: `${fillPct}%`, background: fillColor }}
-        />
-      </div>
+      {/* Target: blender for milk recipes, bowl otherwise */}
+      {isBlender ? (
+        <div className={styles.blender}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/assets/blender.png" alt="믹서기" className={styles.blenderImg} />
+          <div className={styles.blenderFill}>
+            <div
+              className={styles.blenderFillLevel}
+              style={{ height: `${fillPct}%`, background: fillColor }}
+            />
+          </div>
+        </div>
+      ) : (
+        <div className={`${styles.bowlImageWrap} ${isMilk ? styles.bowlImageWrapMilk : ""}`}>
+          <div
+            className={styles.pourFill}
+            style={{ height: `${fillPct}%`, background: fillColor }}
+          />
+        </div>
+      )}
     </div>
   );
 }
