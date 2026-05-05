@@ -150,6 +150,45 @@ const makeMacaronRecipes = (): Recipe[] => {
   }));
 };
 
+/** 하리보 젤리 레시피 7종 (딸기~포도) — 끓여서 곰모양 틀에 짜고 굳히기 */
+const makeJellyRecipes = (): Recipe[] => {
+  const fruits: FruitDef[] = [
+    { id: "strawberry_jelly", name: "딸기 하리보 젤리",     fruit: "딸기",     fruitEmoji: "🍓", color: "blush" },
+    { id: "orange_jelly",     name: "오렌지 하리보 젤리",   fruit: "오렌지",   fruitEmoji: "🍊", color: "orange" },
+    { id: "banana_jelly",     name: "바나나 하리보 젤리",   fruit: "바나나",   fruitEmoji: "🍌", color: "yellow" },
+    { id: "melon_jelly",      name: "메론 하리보 젤리",     fruit: "메론",     fruitEmoji: "🍈", color: "green" },
+    { id: "blueberry_jelly",  name: "블루베리 하리보 젤리", fruit: "블루베리", fruitEmoji: "🫐", color: "blue" },
+    { id: "plum_jelly",       name: "자두 하리보 젤리",     fruit: "자두",     fruitEmoji: "🍑", color: "indigo" },
+    { id: "grape_jelly",      name: "포도 하리보 젤리",     fruit: "포도",     fruitEmoji: "🍇", color: "purple" },
+  ];
+
+  return fruits.map<Recipe>(({ id, name, fruit, fruitEmoji, color }) => ({
+    id,
+    name,
+    category: "jelly",
+    finalImage: `/assets/${id.replace(/_/g, "-")}.png`,
+    rawEmoji: "🥣",
+    cookedEmoji: "🐻",
+    spreadColor: color,
+    steps: [
+      { type: "talk", message: `오늘은 ${name}를 만들어 볼까? ${fruitEmoji}🐻`, button: "알았어!" },
+      { type: "prep", kind: "wash", emoji: fruitEmoji, message: `${fruit}를 깨끗이 씻어봐! 💧`, target: 5 },
+      { type: "prep", kind: "chop", emoji: fruitEmoji, message: `${fruit}를 잘게 잘라봐! 🔪✂️`, target: 4 },
+      { type: "pour",  message: "설탕을 부어봐! 솔솔~", emoji: "🍚", label: "설탕", taps: 3 },
+      { type: "pour",  message: "젤라틴 가루도 솔솔~", emoji: "✨", label: "젤라틴", taps: 3 },
+      { type: "whisk", message: "빙글빙글 녹여봐! 세 바퀴~", target: 3 },
+      { type: "appliance_in",  message: "냄비를 가스레인지에 끌어다 놓아봐!", appliance: "stove" },
+      { type: "appliance_run", message: "보글보글 끓이는 중... 🔥", duration: 3000, appliance: "stove" },
+      { type: "pipe", message: "곰모양 틀에 6마리 짜봐! 짜주머니를 콕콕! 🐻", count: 6, shape: "bear" },
+      { type: "appliance_in",  message: "곰젤리 틀을 냉장고에 끌어다 놓아봐!", appliance: "freezer" },
+      { type: "appliance_run", message: "꽁꽁 굳는 중... ❄️", duration: 3000, appliance: "freezer" },
+      { type: "take_out", message: "굳은 곰젤리를 꺼내자! 🐻" },
+      { type: "eat", message: `친구에게 ${name}를 줘봐! 입에 끌어다 놓으면 냠냠 먹어요`, bites: 3 },
+      { type: "finale", message: "완성! 정말 잘했어! 🎉", button: "다시 하기" },
+    ],
+  }));
+};
+
 /** 새 레시피는 이 배열에 한 덩어리만 추가하면 됨 */
 export const RECIPES: Recipe[] = [
   // ========================================
@@ -382,6 +421,11 @@ export const RECIPES: Recipe[] = [
   // 마카롱 카테고리 (딸기 ~ 포도)
   // ========================================
   ...makeMacaronRecipes(),
+
+  // ========================================
+  // 하리보 젤리 카테고리 (딸기 ~ 포도)
+  // ========================================
+  ...makeJellyRecipes(),
 ];
 
 export function pickRandomRecipe(): Recipe {
