@@ -367,6 +367,27 @@
   animation: popIn 0.35s ease;
 }
 
+/* === 곰모양 틀 (하리보 젤리) === */
+.pipeBearTray {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 14px 16px;
+  background: linear-gradient(180deg, #d8d8e0 0%, #a8a8b8 100%);
+  border-radius: 14px;
+  border: 3px solid #6a6a78;
+  box-shadow: 0 6px 0 #4a4a58, inset 0 -4px 0 rgba(0,0,0,0.15);
+}
+.pipeBearSlot {
+  width: 60px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+  animation: popIn 0.35s ease;
+}
+
 /* === 가스레인지 === */
 .stoveLayout {
   display: flex;

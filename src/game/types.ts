@@ -1,6 +1,6 @@
 export type Appliance = "stove" | "air_fryer" | "blender" | "freezer";
 export type SpreadColor = "pink" | "orange" | "yellow" | "green" | "blue" | "indigo" | "purple" | "blush";
-export type RecipeCategory = "cake" | "milk" | "icecream" | "candy" | "macaron";
+export type RecipeCategory = "cake" | "milk" | "icecream" | "candy" | "macaron" | "jelly";
 export type PrepKind = "wash" | "trim" | "chop";
 
 export type StepType =
@@ -69,10 +69,12 @@ export interface ApplianceOpenStep extends BaseStep {
 
 export interface TakeOutStep extends BaseStep { type: "take_out"; }
 
-/** 짜기: 쟁반에 동그란 반죽을 N개 짜기 (마카롱) */
+/** 짜기: 쟁반/틀에 반죽을 N개 짜기 (마카롱은 동그라미, 하리보 젤리는 곰모양) */
 export interface PipeStep extends BaseStep {
   type: "pipe";
   count: number;
+  /** 짜는 모양 — 기본은 동그라미(마카롱), "bear"는 곰모양 틀(하리보 젤리) */
+  shape?: "circle" | "bear";
 }
 
 /** 마카롱 샌드: 6개 껍질에 크림 발라 짝지어 3개 만들기 */
