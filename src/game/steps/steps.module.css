@@ -314,6 +314,89 @@
   transition: transform 0.2s ease, border-radius 0.2s;
 }
 
+/* === 돌돌 말기 (롤케익) === */
+.rollUpLayout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(280px, 80vw, 360px);
+  height: clamp(160px, 40vw, 200px);
+  cursor: pointer;
+  user-select: none;
+  gap: 0;
+}
+.rollUpSheet {
+  height: clamp(70px, 18vw, 90px);
+  border-radius: 6px 0 0 6px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+  transition: width 0.3s ease;
+  flex-shrink: 0;
+}
+.rollUpRoll {
+  border-radius: 50%;
+  border: 3px solid;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.24), inset 0 -6px 10px rgba(0, 0, 0, 0.12);
+  transition: width 0.3s ease, height 0.3s ease, transform 0.35s ease;
+  flex-shrink: 0;
+  margin-left: -3px;
+}
+
+/* === 자르기 (롤케익) === */
+.sliceLayout {
+  position: relative;
+  width: clamp(280px, 80vw, 360px);
+  height: clamp(160px, 40vw, 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+}
+.rollLog {
+  width: clamp(240px, 65vw, 300px);
+  height: clamp(90px, 22vw, 110px);
+  border-radius: 50px;
+  border: 3px solid;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.24), inset 0 -6px 10px rgba(0, 0, 0, 0.12);
+  position: relative;
+}
+.cutLine {
+  position: absolute;
+  top: -6%;
+  bottom: -6%;
+  width: 3px;
+  background: rgba(0, 0, 0, 0.45);
+  transform: translateX(-50%);
+  border-radius: 2px;
+  animation: cutFlash 0.3s ease;
+}
+@keyframes cutFlash {
+  0%   { transform: translate(-50%, -20px) scaleY(0.2); opacity: 0; }
+  60%  { transform: translate(-50%, 0)     scaleY(1.05); opacity: 1; }
+  100% { transform: translate(-50%, 0)     scaleY(1);   opacity: 1; }
+}
+.sliceRow {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  animation: popIn 0.45s ease;
+}
+.rollPieceWrap {
+  font-size: clamp(70px, 18vw, 90px);
+  line-height: 1;
+  display: inline-block;
+}
+.knife {
+  position: absolute;
+  top: 6%;
+  right: 6%;
+  font-size: clamp(36px, 9vw, 52px);
+  z-index: 3;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.2));
+  animation: prepToolFloat 1.6s ease-in-out infinite;
+}
+
 /* === 짜기 (마카롱) === */
 .pipeLayout {
   display: flex;
@@ -494,6 +577,82 @@
   z-index: 2;
 }
 .airFryerDoorOpen {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* === 오븐 === */
+.oven {
+  width: 240px;
+  height: 220px;
+  background: linear-gradient(180deg, #d8d8de 0%, #9c9ca8 100%);
+  border-radius: 14px;
+  position: relative;
+  box-shadow: 0 6px 0 #686878, inset 0 -8px 0 rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ovenWindow {
+  position: absolute;
+  top: 26px;
+  left: 22px;
+  right: 22px;
+  bottom: 56px;
+  background: radial-gradient(circle, #5a3820 0%, #1a1208 100%);
+  border: 4px solid #50505a;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  z-index: 1;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+.ovenKnob {
+  position: absolute;
+  bottom: 14px;
+  right: 18px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #f0f0f0, #707078);
+  box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.25);
+  z-index: 3;
+}
+.oven::before {
+  /* 손잡이 (가로 막대) */
+  content: "";
+  position: absolute;
+  bottom: 18px;
+  left: 22px;
+  width: 140px;
+  height: 8px;
+  background: linear-gradient(180deg, #e0e0e8, #888894);
+  border-radius: 4px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+  z-index: 3;
+}
+.ovenOn .ovenWindow {
+  background: radial-gradient(circle, #ff9a4a 0%, #c44820 70%);
+  animation: ovenGlow 0.6s infinite alternate;
+}
+@keyframes ovenGlow {
+  from { box-shadow: inset 0 0 18px #ffc080; }
+  to   { box-shadow: inset 0 0 36px #ff7a3d; }
+}
+.ovenDoor {
+  position: absolute;
+  inset: 0;
+  background: rgba(60, 60, 70, 0.18);
+  cursor: pointer;
+  transition: transform 0.6s ease, opacity 0.5s;
+  transform-origin: bottom center;
+  z-index: 2;
+}
+.ovenDoorOpen {
+  transform: rotateX(78deg) translateY(12px);
   opacity: 0;
   pointer-events: none;
 }
@@ -907,6 +1066,15 @@
   justify-content: center;
   font-size: 80px;
   box-shadow: 0 8px 24px rgba(214, 69, 127, 0.3);
+  animation: bounceIn 0.8s ease;
+}
+.placeholderRollcake {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(110px, 26vw, 170px);
+  line-height: 1;
   animation: bounceIn 0.8s ease;
 }
 @keyframes bounceIn {

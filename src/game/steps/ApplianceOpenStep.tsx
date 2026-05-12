@@ -9,6 +9,7 @@ import styles from "./steps.module.css";
 export default function ApplianceOpenStep({ step, recipe, onComplete }: StepProps<AOS>) {
   const [open, setOpen] = useState(false);
   const isAirFryer = step.appliance === "air_fryer";
+  const isOven = step.appliance === "oven";
   const isMacaron = recipe.category === "macaron";
 
   function handleClick() {
@@ -29,6 +30,19 @@ export default function ApplianceOpenStep({ step, recipe, onComplete }: StepProp
           onClick={handleClick}
         />
         <div className={styles.airFryerWindow}>{inside}</div>
+      </div>
+    );
+  }
+
+  if (isOven) {
+    return (
+      <div className={styles.oven}>
+        <div
+          className={`${styles.ovenDoor} ${open ? styles.ovenDoorOpen : ""}`}
+          onClick={handleClick}
+        />
+        <div className={styles.ovenWindow}>{inside}</div>
+        <div className={styles.ovenKnob} />
       </div>
     );
   }

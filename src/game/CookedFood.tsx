@@ -24,6 +24,10 @@ export const SHELL_EDGE: Record<SpreadColor, string> = {
   purple: "#9933cc",
 };
 
+/** 롤케익 시트 빵 색 (구운 스폰지) */
+export const SPONGE_FILL = "#ffe0a0";
+export const SPONGE_EDGE = "#c48538";
+
 /** 마카롱 모양 (껍질 2장 + 크림). 부모 font-size에 비례해 크기 조절. */
 export function MacaronShape({ color = "pink" }: { color?: SpreadColor }) {
   const fill = SHELL_FILL[color];
@@ -134,10 +138,67 @@ export function MacaronTray({
   );
 }
 
-/** 완성된 음식: 마카롱은 SVG, 그 외 카테고리는 cookedEmoji 텍스트. */
+/** 롤케익 시트 (오븐에서 막 나온 직사각형 스폰지 빵 — 크림 없음) */
+export function RollCakeSheet() {
+  return (
+    <svg
+      width="1.4em"
+      height="1em"
+      viewBox="0 0 140 100"
+      style={{
+        verticalAlign: "middle",
+        filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.18))",
+        overflow: "visible",
+      }}
+      aria-hidden="true"
+    >
+      {/* 시트 빵 본체 */}
+      <rect x="6" y="22" width="128" height="62" rx="6" fill={SPONGE_FILL} stroke={SPONGE_EDGE} strokeWidth="2.5" />
+      {/* 위쪽 하이라이트 */}
+      <rect x="10" y="26" width="120" height="10" rx="3" fill="rgba(255,250,210,0.55)" />
+      {/* 스폰지 결 */}
+      <line x1="14" y1="48" x2="126" y2="48" stroke="rgba(180,120,50,0.2)" strokeWidth="1.5" />
+      <line x1="14" y1="60" x2="126" y2="60" stroke="rgba(180,120,50,0.2)" strokeWidth="1.5" />
+      <line x1="14" y1="72" x2="126" y2="72" stroke="rgba(180,120,50,0.2)" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+/** 롤케익 슬라이스 (자른 단면 — 동심 나선) */
+export function RollCakeSlice({ color = "pink" }: { color?: SpreadColor }) {
+  const cream = SHELL_FILL[color];
+  return (
+    <svg
+      width="1em"
+      height="1em"
+      viewBox="0 0 100 100"
+      style={{
+        verticalAlign: "middle",
+        filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.22))",
+        overflow: "visible",
+      }}
+      aria-hidden="true"
+    >
+      {/* 외곽 케이크 */}
+      <circle cx="50" cy="50" r="46" fill={SPONGE_FILL} stroke={SPONGE_EDGE} strokeWidth="3" />
+      {/* 동심 크림 링 (나선 느낌) */}
+      <circle cx="50" cy="50" r="36" fill="none" stroke={cream} strokeWidth="6" opacity="0.9" />
+      <circle cx="50" cy="50" r="26" fill="none" stroke={cream} strokeWidth="6" opacity="0.9" />
+      <circle cx="50" cy="50" r="16" fill="none" stroke={cream} strokeWidth="6" opacity="0.9" />
+      <circle cx="50" cy="50" r="7" fill={cream} />
+      {/* 하이라이트 */}
+      <ellipse cx="34" cy="34" rx="10" ry="6" fill="rgba(255,255,255,0.4)" />
+    </svg>
+  );
+}
+
+/** 완성된 음식: 마카롱·롤케익은 SVG, 그 외 카테고리는 cookedEmoji 텍스트. */
 export default function CookedFood({ recipe }: { recipe: Recipe }) {
   if (recipe.category === "macaron") {
     return <MacaronShape color={recipe.spreadColor ?? "pink"} />;
+  }
+  if (recipe.category === "rollcake") {
+    return <RollCakeSheet />;
   }
   return <>{recipe.cookedEmoji}</>;
 }
