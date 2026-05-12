@@ -314,6 +314,33 @@
   transition: transform 0.2s ease, border-radius 0.2s;
 }
 
+/* === 돌돌 말기 (롤케익) === */
+.rollUpLayout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(280px, 80vw, 360px);
+  height: clamp(160px, 40vw, 200px);
+  cursor: pointer;
+  user-select: none;
+  gap: 0;
+}
+.rollUpSheet {
+  height: clamp(70px, 18vw, 90px);
+  border-radius: 6px 0 0 6px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+  transition: width 0.3s ease;
+  flex-shrink: 0;
+}
+.rollUpRoll {
+  border-radius: 50%;
+  border: 3px solid;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.24), inset 0 -6px 10px rgba(0, 0, 0, 0.12);
+  transition: width 0.3s ease, height 0.3s ease, transform 0.35s ease;
+  flex-shrink: 0;
+  margin-left: -3px;
+}
+
 /* === 짜기 (마카롱) === */
 .pipeLayout {
   display: flex;

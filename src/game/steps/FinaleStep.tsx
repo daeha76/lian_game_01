@@ -10,7 +10,7 @@ export default function FinaleStep({ recipe }: StepProps<FS>) {
   return (
     <div className={styles.finale}>
       {imgError ? (
-        <div className={styles.placeholderCake}>🍰</div>
+        <div className={styles.placeholderCake}>{recipe.cookedEmoji}</div>
       ) : (
         // 사용자 그림 placeholder — 없으면 onError로 fallback
         // eslint-disable-next-line @next/next/no-img-element

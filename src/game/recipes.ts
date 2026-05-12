@@ -189,6 +189,45 @@ const makeJellyRecipes = (): Recipe[] => {
   }));
 };
 
+/** 롤케익 레시피 7종 (딸기~포도) — 시트 굽고 크림 발라 돌돌 말기 */
+const makeRollcakeRecipes = (): Recipe[] => {
+  const fruits: FruitDef[] = [
+    { id: "strawberry_rollcake", name: "딸기 롤케익",     fruit: "딸기",     fruitEmoji: "🍓", color: "blush" },
+    { id: "orange_rollcake",     name: "오렌지 롤케익",   fruit: "오렌지",   fruitEmoji: "🍊", color: "orange" },
+    { id: "banana_rollcake",     name: "바나나 롤케익",   fruit: "바나나",   fruitEmoji: "🍌", color: "yellow" },
+    { id: "melon_rollcake",      name: "메론 롤케익",     fruit: "메론",     fruitEmoji: "🍈", color: "green" },
+    { id: "blueberry_rollcake",  name: "블루베리 롤케익", fruit: "블루베리", fruitEmoji: "🫐", color: "blue" },
+    { id: "plum_rollcake",       name: "자두 롤케익",     fruit: "자두",     fruitEmoji: "🍑", color: "indigo" },
+    { id: "grape_rollcake",      name: "포도 롤케익",     fruit: "포도",     fruitEmoji: "🍇", color: "purple" },
+  ];
+
+  return fruits.map<Recipe>(({ id, name, fruit, fruitEmoji, color }) => ({
+    id,
+    name,
+    category: "rollcake",
+    finalImage: `/assets/${id.replace(/_/g, "-")}.png`,
+    rawEmoji: "🥞",
+    cookedEmoji: "🍥",
+    spreadColor: color,
+    steps: [
+      { type: "talk", message: `오늘은 ${name}을 만들어 볼까? ${fruitEmoji}🍥`, button: "알았어!" },
+      { type: "crack_egg", message: "달걀을 탁탁 깨봐! 💥", taps: 3 },
+      { type: "whisk",     message: "거품기로 빙글빙글 저어봐! 세 바퀴~", target: 3 },
+      { type: "pour",      message: "우유를 부어봐! 촤르르~", emoji: "🥛", label: "우유", taps: 3 },
+      { type: "pour",      message: "밀가루를 넣어봐! 솔솔~", emoji: "🌾", label: "밀가루", taps: 3 },
+      { type: "knead",     message: "반죽을 살살 섞어봐! 5번", target: 5 },
+      { type: "appliance_in",   message: "시트 반죽을 에어프라이기에 끌어다 놓아봐!", appliance: "air_fryer" },
+      { type: "appliance_run",  message: "얇은 시트로 굽는 중... 💨", duration: 3000, appliance: "air_fryer" },
+      { type: "appliance_open", message: "다 됐다! 문을 열어봐", appliance: "air_fryer" },
+      { type: "take_out",  message: "시트 빵을 꺼내자!" },
+      { type: "spread",    message: `${fruit} 크림을 시트에 발라봐! 문질문질~`, color, target: 0.45 },
+      { type: "roll_up",   message: "이제 돌돌 말아봐! 5번 굴리면 완성~ 🌀", target: 5 },
+      { type: "eat",       message: `친구에게 ${name}을 줘봐! 입에 끌어다 놓으면 냠냠 먹어요`, bites: 3 },
+      { type: "finale",    message: "완성! 정말 잘했어! 🎉", button: "다시 하기" },
+    ],
+  }));
+};
+
 /** 새 레시피는 이 배열에 한 덩어리만 추가하면 됨 */
 export const RECIPES: Recipe[] = [
   // ========================================
@@ -426,6 +465,11 @@ export const RECIPES: Recipe[] = [
   // 하리보 젤리 카테고리 (딸기 ~ 포도)
   // ========================================
   ...makeJellyRecipes(),
+
+  // ========================================
+  // 롤케익 카테고리 (딸기 ~ 포도)
+  // ========================================
+  ...makeRollcakeRecipes(),
 ];
 
 export function pickRandomRecipe(): Recipe {

@@ -19,6 +19,7 @@ const THEMES: Record<SpreadColor, { dots: string; light: string; main: string; g
 
 const CATEGORIES: { key: RecipeCategory; label: string; emoji: string }[] = [
   { key: "cake",     label: "케잌",       emoji: "🍰" },
+  { key: "rollcake", label: "롤케익",     emoji: "🍥" },
   { key: "milk",     label: "우유",       emoji: "🥤" },
   { key: "icecream", label: "아이스크림", emoji: "🍦" },
   { key: "candy",    label: "사탕",       emoji: "🍬" },
@@ -32,6 +33,7 @@ import CrackEggStep from "./steps/CrackEggStep";
 import WhiskStep from "./steps/WhiskStep";
 import PourStep from "./steps/PourStep";
 import DoughStep from "./steps/DoughStep";
+import RollUpStep from "./steps/RollUpStep";
 import PrepStep from "./steps/PrepStep";
 import PipeStep from "./steps/PipeStep";
 import ApplianceInStep from "./steps/ApplianceInStep";
@@ -223,6 +225,7 @@ function StepRenderer({
     case "pour":             return <PourStep             key={key} step={step} {...props} />;
     case "knead":
     case "roll":             return <DoughStep            key={key} step={step} {...props} />;
+    case "roll_up":          return <RollUpStep           key={key} step={step} {...props} />;
     case "prep":             return <PrepStep             key={key} step={step} {...props} />;
     case "pipe":             return <PipeStep             key={key} step={step} {...props} />;
     case "appliance_in":     return <ApplianceInStep      key={key} step={step} {...props} />;
