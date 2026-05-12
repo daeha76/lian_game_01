@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useDraggable } from "../useDrag";
 import type { EatStep as ES, Recipe, StepProps, SpreadColor } from "../types";
-import CookedFood from "../CookedFood";
+import CookedFood, { RollCakeSlice } from "../CookedFood";
 import styles from "./steps.module.css";
 
 const FACES = ["😊", "😋", "🤤", "😄"];
@@ -107,7 +107,11 @@ function Bread({
   return (
     <div ref={ref} className={styles.jamBread} style={{ transform: `scale(${scale})` }}>
       <div className={styles.jamBreadInner}>
-        <CookedFood recipe={recipe} />
+        {recipe.category === "rollcake" ? (
+          <RollCakeSlice color={recipe.spreadColor ?? "pink"} />
+        ) : (
+          <CookedFood recipe={recipe} />
+        )}
         {showJam && <span className={styles.jamOverlay} style={{ background: overlayBg }} />}
       </div>
     </div>

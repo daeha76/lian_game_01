@@ -87,9 +87,10 @@ const SPREAD_DONE: Record<SpreadColor, string> = {
   blush:  "딸기우유 완성! 맛있겠다 😋",
 };
 
-export default function SpreadStep({ step, onComplete, setMessage }: StepProps<SS>) {
+export default function SpreadStep({ step, recipe, onComplete, setMessage }: StepProps<SS>) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const finishedRef = useRef(false);
+  const isRollcake = recipe.category === "rollcake";
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -105,6 +106,28 @@ export default function SpreadStep({ step, onComplete, setMessage }: StepProps<S
     const palette = PALETTES[step.color];
 
     function breadPath() {
+      if (isRollcake) {
+        // 직사각형 시트 빵 (살짝 둥근 모서리)
+        const padX = 20;
+        const padY = 60;
+        const x = padX;
+        const y = padY;
+        const w = W - padX * 2;
+        const h = H - padY * 2;
+        const r = 10;
+        ctx!.beginPath();
+        ctx!.moveTo(x + r, y);
+        ctx!.lineTo(x + w - r, y);
+        ctx!.arcTo(x + w, y, x + w, y + r, r);
+        ctx!.lineTo(x + w, y + h - r);
+        ctx!.arcTo(x + w, y + h, x + w - r, y + h, r);
+        ctx!.lineTo(x + r, y + h);
+        ctx!.arcTo(x, y + h, x, y + h - r, r);
+        ctx!.lineTo(x, y + r);
+        ctx!.arcTo(x, y, x + r, y, r);
+        ctx!.closePath();
+        return;
+      }
       const padX = 40;
       const padY = 40;
       const x = padX;
@@ -128,34 +151,59 @@ export default function SpreadStep({ step, onComplete, setMessage }: StepProps<S
     ctx.fill();
     ctx.restore();
 
-    // 빵/케잌 본체
+    // 빵/시트 본체
     breadPath();
-    const grad = ctx.createLinearGradient(0, 40, 0, H - 40);
-    grad.addColorStop(0, "#f5d59a");
-    grad.addColorStop(0.5, "#e0a965");
-    grad.addColorStop(1, "#b87a3f");
+    const grad = ctx.createLinearGradient(0, isRollcake ? 60 : 40, 0, H - (isRollcake ? 60 : 40));
+    if (isRollcake) {
+      grad.addColorStop(0, "#fff0c8");
+      grad.addColorStop(0.5, "#ffe0a0");
+      grad.addColorStop(1, "#d4a05a");
+    } else {
+      grad.addColorStop(0, "#f5d59a");
+      grad.addColorStop(0.5, "#e0a965");
+      grad.addColorStop(1, "#b87a3f");
+    }
     ctx.fillStyle = grad;
     ctx.fill();
 
-    // 위쪽 하이라이트 + 줄무늬
+    // 위쪽 하이라이트 + 줄무늬 (롤케익은 가로 결만)
     ctx.save();
     breadPath();
     ctx.clip();
-    const hi = ctx.createLinearGradient(0, 40, 0, 100);
-    hi.addColorStop(0, "rgba(255,240,200,0.55)");
-    hi.addColorStop(1, "rgba(255,240,200,0)");
-    ctx.fillStyle = hi;
-    ctx.fillRect(0, 40, W, 60);
+    if (isRollcake) {
+      const hi = ctx.createLinearGradient(0, 60, 0, 90);
+      hi.addColorStop(0, "rgba(255,250,210,0.6)");
+      hi.addColorStop(1, "rgba(255,250,210,0)");
+      ctx.fillStyle = hi;
+      ctx.fillRect(0, 60, W, 30);
 
-    ctx.strokeStyle = "rgba(120, 70, 30, 0.35)";
-    ctx.lineWidth = 5;
-    ctx.lineCap = "round";
-    for (let i = -1; i <= 1; i++) {
-      ctx.beginPath();
-      const cx = W / 2 + i * 55;
-      ctx.moveTo(cx - 14, 75);
-      ctx.lineTo(cx + 14, 145);
-      ctx.stroke();
+      ctx.strokeStyle = "rgba(180, 120, 50, 0.22)";
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      for (let i = 0; i < 3; i++) {
+        const yy = 95 + i * 15;
+        ctx.beginPath();
+        ctx.moveTo(30, yy);
+        ctx.lineTo(W - 30, yy);
+        ctx.stroke();
+      }
+    } else {
+      const hi = ctx.createLinearGradient(0, 40, 0, 100);
+      hi.addColorStop(0, "rgba(255,240,200,0.55)");
+      hi.addColorStop(1, "rgba(255,240,200,0)");
+      ctx.fillStyle = hi;
+      ctx.fillRect(0, 40, W, 60);
+
+      ctx.strokeStyle = "rgba(120, 70, 30, 0.35)";
+      ctx.lineWidth = 5;
+      ctx.lineCap = "round";
+      for (let i = -1; i <= 1; i++) {
+        ctx.beginPath();
+        const cx = W / 2 + i * 55;
+        ctx.moveTo(cx - 14, 75);
+        ctx.lineTo(cx + 14, 145);
+        ctx.stroke();
+      }
     }
     ctx.restore();
 
