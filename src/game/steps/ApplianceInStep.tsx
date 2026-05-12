@@ -70,6 +70,11 @@ export default function ApplianceInStep({ step, recipe, onComplete }: StepProps<
           <div className={styles.freezerInside}>{insideView}</div>
           <div className={styles.freezerHandle} />
         </div>
+      ) : step.appliance === "oven" ? (
+        <div ref={applianceRef} className={styles.oven}>
+          <div className={styles.ovenWindow}>{insideView}</div>
+          <div className={styles.ovenKnob} />
+        </div>
       ) : (
         <div ref={applianceRef} className={styles.stove}>
           <div className={styles.burner}>{insideView}</div>

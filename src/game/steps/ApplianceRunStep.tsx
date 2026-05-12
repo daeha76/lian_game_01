@@ -12,6 +12,7 @@ export default function ApplianceRunStep({ step, recipe, onComplete, setMessage 
   const isAirFryer = step.appliance === "air_fryer";
   const isBlender  = step.appliance === "blender";
   const isFreezer  = step.appliance === "freezer";
+  const isOven     = step.appliance === "oven";
 
   useEffect(() => {
     let dots = 0;
@@ -21,8 +22,10 @@ export default function ApplianceRunStep({ step, recipe, onComplete, setMessage 
         ? "위잉~ 가는 중"
         : isAirFryer
           ? "에어프라이기로 굽는 중"
-          : "맛있게 구워지는 중";
-    const fx = isFreezer ? "❄️" : isBlender ? "🌀" : isAirFryer ? "💨" : "🔥";
+          : isOven
+            ? "오븐에서 굽는 중"
+            : "맛있게 구워지는 중";
+    const fx = isFreezer ? "❄️" : isBlender ? "🌀" : isAirFryer ? "💨" : isOven ? "🔥" : "🔥";
     const interval = setInterval(() => {
       dots = (dots + 1) % 4;
       setMessage(verb + ".".repeat(dots) + " " + fx);
@@ -68,6 +71,15 @@ export default function ApplianceRunStep({ step, recipe, onComplete, setMessage 
         <div className={styles.freezerInside}>{food}</div>
         <div className={styles.freezerHandle} />
         <div className={styles.freezerSnow}>❄️ ❄️ ❄️</div>
+      </div>
+    );
+  }
+
+  if (isOven) {
+    return (
+      <div className={`${styles.oven} ${styles.ovenOn}`}>
+        <div className={styles.ovenWindow}>{food}</div>
+        <div className={styles.ovenKnob} />
       </div>
     );
   }

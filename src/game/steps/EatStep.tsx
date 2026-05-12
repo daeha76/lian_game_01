@@ -30,9 +30,9 @@ export default function EatStep({ step, recipe, onComplete, setMessage }: StepPr
   const [chomping, setChomping] = useState(false);
 
   const isDone = bites >= step.bites;
-  const isMacaron = recipe.category === "macaron";
-  // 마카롱은 매번 새 마카롱 1개씩 — 쪼그라들지 않음. 그 외는 한 덩어리를 베어 무니 점점 작아짐.
-  const breadScale = isMacaron ? 1 : Math.max(0.25, 1 - bites / step.bites);
+  // 마카롱/롤케익은 매번 새 조각 1개씩 — 쪼그라들지 않음. 그 외는 한 덩어리를 베어 무니 점점 작아짐.
+  const isMultiPiece = recipe.category === "macaron" || recipe.category === "rollcake";
+  const breadScale = isMultiPiece ? 1 : Math.max(0.25, 1 - bites / step.bites);
 
   useEffect(() => {
     if (bites === 0) return;
@@ -51,7 +51,7 @@ export default function EatStep({ step, recipe, onComplete, setMessage }: StepPr
   return (
     <div className={styles.eatLayout}>
       {!isDone && (
-        isMacaron ? (
+        isMultiPiece ? (
           <div className={styles.macaronTrio}>
             {Array.from({ length: remaining }).map((_, i) => (
               <Bread

@@ -1,4 +1,4 @@
-export type Appliance = "stove" | "air_fryer" | "blender" | "freezer";
+export type Appliance = "stove" | "air_fryer" | "blender" | "freezer" | "oven";
 export type SpreadColor = "pink" | "orange" | "yellow" | "green" | "blue" | "indigo" | "purple" | "blush";
 export type RecipeCategory = "cake" | "milk" | "icecream" | "candy" | "macaron" | "jelly" | "rollcake";
 export type PrepKind = "wash" | "trim" | "chop";
@@ -19,6 +19,7 @@ export type StepType =
   | "appliance_open"
   | "take_out"
   | "spread"
+  | "slice"
   | "macaron_sandwich"
   | "eat"
   | "finale";
@@ -94,6 +95,13 @@ export interface SpreadStep extends BaseStep {
   target: number;
 }
 
+/** 자르기: 롤케익을 N번 잘라 N+1조각으로 만들기 */
+export interface SliceStep extends BaseStep {
+  type: "slice";
+  /** 자르는 횟수 (조각 수 = target + 1) */
+  target: number;
+}
+
 export interface EatStep extends BaseStep { type: "eat"; bites: number; }
 export interface FinaleStep extends BaseStep { type: "finale"; }
 
@@ -113,6 +121,7 @@ export type Step =
   | ApplianceOpenStep
   | TakeOutStep
   | SpreadStep
+  | SliceStep
   | MacaronSandwichStep
   | EatStep
   | FinaleStep;
