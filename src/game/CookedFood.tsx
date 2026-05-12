@@ -138,10 +138,8 @@ export function MacaronTray({
   );
 }
 
-/** 롤케익 시트 (오븐에서 나오는 직사각형 스폰지 빵 + 크림층) */
-export function RollCakeSheet({ color = "pink" }: { color?: SpreadColor }) {
-  const cream = SHELL_FILL[color];
-  const creamEdge = SHELL_EDGE[color];
+/** 롤케익 시트 (오븐에서 막 나온 직사각형 스폰지 빵 — 크림 없음) */
+export function RollCakeSheet() {
   return (
     <svg
       width="1.4em"
@@ -156,14 +154,12 @@ export function RollCakeSheet({ color = "pink" }: { color?: SpreadColor }) {
     >
       {/* 시트 빵 본체 */}
       <rect x="6" y="22" width="128" height="62" rx="6" fill={SPONGE_FILL} stroke={SPONGE_EDGE} strokeWidth="2.5" />
-      {/* 크림 층 */}
-      <rect x="10" y="26" width="120" height="20" rx="2" fill={cream} stroke={creamEdge} strokeWidth="1" />
-      {/* 크림 하이라이트 */}
-      <rect x="14" y="28" width="56" height="5" fill="rgba(255,255,255,0.55)" rx="2" />
+      {/* 위쪽 하이라이트 */}
+      <rect x="10" y="26" width="120" height="10" rx="3" fill="rgba(255,250,210,0.55)" />
       {/* 스폰지 결 */}
-      <line x1="10" y1="56" x2="130" y2="56" stroke="rgba(180,120,50,0.18)" strokeWidth="1.5" />
-      <line x1="10" y1="66" x2="130" y2="66" stroke="rgba(180,120,50,0.18)" strokeWidth="1.5" />
-      <line x1="10" y1="76" x2="130" y2="76" stroke="rgba(180,120,50,0.18)" strokeWidth="1.5" />
+      <line x1="14" y1="48" x2="126" y2="48" stroke="rgba(180,120,50,0.2)" strokeWidth="1.5" />
+      <line x1="14" y1="60" x2="126" y2="60" stroke="rgba(180,120,50,0.2)" strokeWidth="1.5" />
+      <line x1="14" y1="72" x2="126" y2="72" stroke="rgba(180,120,50,0.2)" strokeWidth="1.5" />
     </svg>
   );
 }
@@ -202,7 +198,7 @@ export default function CookedFood({ recipe }: { recipe: Recipe }) {
     return <MacaronShape color={recipe.spreadColor ?? "pink"} />;
   }
   if (recipe.category === "rollcake") {
-    return <RollCakeSheet color={recipe.spreadColor ?? "pink"} />;
+    return <RollCakeSheet />;
   }
   return <>{recipe.cookedEmoji}</>;
 }
