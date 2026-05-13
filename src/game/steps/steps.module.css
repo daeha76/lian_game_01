@@ -351,39 +351,44 @@
   justify-content: center;
   cursor: pointer;
   user-select: none;
+  font-size: clamp(64px, 16vw, 84px);
 }
-.rollLog {
-  width: clamp(240px, 65vw, 300px);
-  height: clamp(90px, 22vw, 110px);
-  border-radius: 50px;
+.sliceCuts {
+  display: flex;
+  gap: 0.18em;
+  align-items: center;
+  justify-content: center;
+  font-size: inherit;
+}
+.rollLogShrink {
+  height: 1em;
+  border-radius: 0.5em;
   border: 3px solid;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.24), inset 0 -6px 10px rgba(0, 0, 0, 0.12);
-  position: relative;
+  transition: width 0.35s ease;
+  flex-shrink: 0;
 }
-.cutLine {
-  position: absolute;
-  top: -6%;
-  bottom: -6%;
-  width: 3px;
-  background: rgba(0, 0, 0, 0.45);
-  transform: translateX(-50%);
-  border-radius: 2px;
-  animation: cutFlash 0.3s ease;
+.cutSlice {
+  font-size: inherit;
+  line-height: 1;
+  display: inline-block;
+  animation: cutPopIn 0.5s ease;
 }
-@keyframes cutFlash {
-  0%   { transform: translate(-50%, -20px) scaleY(0.2); opacity: 0; }
-  60%  { transform: translate(-50%, 0)     scaleY(1.05); opacity: 1; }
-  100% { transform: translate(-50%, 0)     scaleY(1);   opacity: 1; }
+@keyframes cutPopIn {
+  0%   { transform: translateX(-30px) scale(0.55, 0.85); opacity: 0; }
+  60%  { transform: translateX(0)     scale(1.12, 1.05); opacity: 1; }
+  100% { transform: translateX(0)     scale(1);          opacity: 1; }
 }
 .sliceRow {
   display: flex;
-  gap: 16px;
+  gap: 0.18em;
   align-items: center;
   justify-content: center;
+  font-size: inherit;
   animation: popIn 0.45s ease;
 }
 .rollPieceWrap {
-  font-size: clamp(70px, 18vw, 90px);
+  font-size: inherit;
   line-height: 1;
   display: inline-block;
 }

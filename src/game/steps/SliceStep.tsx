@@ -19,13 +19,9 @@ export default function SliceStep({ step, recipe, onComplete, setMessage }: Step
       setMessage(`슥슥~ ${count}/${step.target}`);
       return;
     }
-    // 두 번째 컷이 살짝 보이도록 잠깐 머문 뒤 분리
-    setMessage("슥슥~ 잘랐다!");
-    const tSep = setTimeout(() => {
-      setPhase("separated");
-      setMessage(`${slices}조각 완성! 🎉`);
-    }, 900);
-    const tDone = setTimeout(onComplete, 1900);
+    setMessage(`${slices}조각 완성! 🎉`);
+    const tSep = setTimeout(() => setPhase("separated"), 1000);
+    const tDone = setTimeout(onComplete, 2000);
     return () => {
       clearTimeout(tSep);
       clearTimeout(tDone);
@@ -42,6 +38,11 @@ export default function SliceStep({ step, recipe, onComplete, setMessage }: Step
     ${cream} 6px,
     ${cream} 10px)`;
 
+  // 본체 로그 너비: 자를수록 줄어들어 1 → (slices-1)/slices → ... → 1/slices
+  // 1em = 한 조각 크기, 전체 로그는 slices em
+  const remaining = slices - count;
+  const logWidthEm = remaining;
+
   return (
     <div className={styles.sliceLayout} onClick={handle}>
       {phase === "separated" ? (
@@ -53,16 +54,21 @@ export default function SliceStep({ step, recipe, onComplete, setMessage }: Step
           ))}
         </div>
       ) : (
-        <div
-          className={styles.rollLog}
-          style={{ background: logBg, borderColor: SPONGE_EDGE }}
-        >
-          {Array.from({ length: count }).map((_, i) => (
+        <div className={styles.sliceCuts}>
+          {remaining > 0 && (
             <div
-              key={i}
-              className={styles.cutLine}
-              style={{ left: `${((i + 1) / slices) * 100}%` }}
+              className={styles.rollLogShrink}
+              style={{
+                width: `${logWidthEm}em`,
+                background: logBg,
+                borderColor: SPONGE_EDGE,
+              }}
             />
+          )}
+          {Array.from({ length: count }).map((_, i) => (
+            <span key={i} className={styles.cutSlice}>
+              <RollCakeSlice color={color} />
+            </span>
           ))}
         </div>
       )}
