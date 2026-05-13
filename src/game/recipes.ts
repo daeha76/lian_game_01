@@ -220,7 +220,7 @@ const makeRollcakeRecipes = (): Recipe[] => {
       { type: "appliance_open", message: "다 됐다! 오븐 문을 열어봐", appliance: "oven" },
       { type: "take_out",  message: "시트 빵을 꺼내자!" },
       { type: "spread",    message: `${fruit} 크림을 시트에 발라봐! 문질문질~`, color, target: 0.45 },
-      { type: "roll_up",   message: "이제 돌돌 말아봐! 5번 굴리면 완성~ 🌀", target: 5 },
+      { type: "roll_up",   message: "이제 돌돌 말아봐! 마우스를 휘휘 저어줘~ 🌀", target: 3 },
       { type: "slice",     message: "칼로 슥슥~ 두 번 잘라서 3조각 만들자! 🔪", target: 2 },
       { type: "eat",       message: `친구에게 ${name} 3조각을 하나씩 줘봐! 입에 끌어다 놓으면 냠냠`, bites: 3 },
       { type: "finale",    message: "완성! 정말 잘했어! 🎉", button: "다시 하기" },
