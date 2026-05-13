@@ -321,9 +321,13 @@
   justify-content: center;
   width: clamp(280px, 80vw, 360px);
   height: clamp(160px, 40vw, 200px);
-  cursor: pointer;
+  cursor: grab;
+  touch-action: none;
   user-select: none;
   gap: 0;
+}
+.rollUpLayout:active {
+  cursor: grabbing;
 }
 .rollUpSheet {
   height: clamp(70px, 18vw, 90px);
@@ -345,45 +349,49 @@
 .sliceLayout {
   position: relative;
   width: clamp(280px, 80vw, 360px);
-  height: clamp(160px, 40vw, 200px);
+  height: clamp(180px, 44vw, 220px);
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   user-select: none;
+  font-size: clamp(64px, 16vw, 84px);
 }
-.rollLog {
-  width: clamp(240px, 65vw, 300px);
-  height: clamp(90px, 22vw, 110px);
-  border-radius: 50px;
+.sliceCuts {
+  display: flex;
+  gap: 0.18em;
+  align-items: center;
+  justify-content: center;
+  font-size: inherit;
+}
+.rollLogShrink {
+  height: 1em;
+  border-radius: 0.5em;
   border: 3px solid;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.24), inset 0 -6px 10px rgba(0, 0, 0, 0.12);
-  position: relative;
+  transition: width 0.35s ease;
+  flex-shrink: 0;
 }
-.cutLine {
-  position: absolute;
-  top: -6%;
-  bottom: -6%;
-  width: 3px;
-  background: rgba(0, 0, 0, 0.45);
-  transform: translateX(-50%);
-  border-radius: 2px;
-  animation: cutFlash 0.3s ease;
+.cutSlice {
+  font-size: inherit;
+  line-height: 1;
+  display: inline-block;
+  animation: cutPopIn 0.5s ease;
 }
-@keyframes cutFlash {
-  0%   { transform: translate(-50%, -20px) scaleY(0.2); opacity: 0; }
-  60%  { transform: translate(-50%, 0)     scaleY(1.05); opacity: 1; }
-  100% { transform: translate(-50%, 0)     scaleY(1);   opacity: 1; }
+@keyframes cutPopIn {
+  0%   { transform: translateX(-30px) scale(0.55, 0.85); opacity: 0; }
+  60%  { transform: translateX(0)     scale(1.12, 1.05); opacity: 1; }
+  100% { transform: translateX(0)     scale(1);          opacity: 1; }
 }
 .sliceRow {
   display: flex;
-  gap: 16px;
+  gap: 0.18em;
   align-items: center;
   justify-content: center;
+  font-size: inherit;
   animation: popIn 0.45s ease;
 }
 .rollPieceWrap {
-  font-size: clamp(70px, 18vw, 90px);
+  font-size: inherit;
   line-height: 1;
   display: inline-block;
 }
@@ -395,6 +403,26 @@
   z-index: 3;
   filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.2));
   animation: prepToolFloat 1.6s ease-in-out infinite;
+}
+.knifeDraggable {
+  position: absolute;
+  top: 8px;
+  right: 14px;
+  font-size: clamp(52px, 13vw, 76px);
+  z-index: 3;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  line-height: 1;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.25));
+  animation: knifeWobble 1.6s ease-in-out infinite;
+}
+.knifeDraggable:active {
+  cursor: grabbing;
+}
+@keyframes knifeWobble {
+  0%, 100% { transform: rotate(-14deg); }
+  50%      { transform: rotate(10deg)  translateY(-4px); }
 }
 
 /* === 짜기 (마카롱) === */
