@@ -321,9 +321,13 @@
   justify-content: center;
   width: clamp(280px, 80vw, 360px);
   height: clamp(160px, 40vw, 200px);
-  cursor: pointer;
+  cursor: grab;
+  touch-action: none;
   user-select: none;
   gap: 0;
+}
+.rollUpLayout:active {
+  cursor: grabbing;
 }
 .rollUpSheet {
   height: clamp(70px, 18vw, 90px);
