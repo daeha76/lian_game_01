@@ -345,11 +345,10 @@
 .sliceLayout {
   position: relative;
   width: clamp(280px, 80vw, 360px);
-  height: clamp(160px, 40vw, 200px);
+  height: clamp(180px, 44vw, 220px);
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   user-select: none;
   font-size: clamp(64px, 16vw, 84px);
 }
@@ -400,6 +399,26 @@
   z-index: 3;
   filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.2));
   animation: prepToolFloat 1.6s ease-in-out infinite;
+}
+.knifeDraggable {
+  position: absolute;
+  top: 8px;
+  right: 14px;
+  font-size: clamp(52px, 13vw, 76px);
+  z-index: 3;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  line-height: 1;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.25));
+  animation: knifeWobble 1.6s ease-in-out infinite;
+}
+.knifeDraggable:active {
+  cursor: grabbing;
+}
+@keyframes knifeWobble {
+  0%, 100% { transform: rotate(-14deg); }
+  50%      { transform: rotate(10deg)  translateY(-4px); }
 }
 
 /* === 짜기 (마카롱) === */

@@ -1,36 +1,59 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { SliceStep as SliceStepData, StepProps } from "../types";
 import { SHELL_FILL, SPONGE_FILL, SPONGE_EDGE, RollCakeSlice } from "../CookedFood";
+import { useDraggable } from "../useDrag";
 import styles from "./steps.module.css";
 
 export default function SliceStep({ step, recipe, onComplete, setMessage }: StepProps<SliceStepData>) {
   const [count, setCount] = useState(0);
   const [phase, setPhase] = useState<"cutting" | "separated">("cutting");
+  const knifeRef = useRef<HTMLSpanElement>(null);
+  const logRef = useRef<HTMLDivElement>(null);
+
   const color = recipe.spreadColor ?? "pink";
   const cream = SHELL_FILL[color];
   const slices = step.target + 1;
   const done = count >= step.target;
+  const remaining = slices - count;
+
+  function handleCut() {
+    setCount((p) => Math.min(p + 1, step.target));
+    const knife = knifeRef.current;
+    if (knife) {
+      knife.style.transition = "transform 0.4s ease";
+      knife.style.transform = "";
+      const tid = window.setTimeout(() => {
+        if (knife) knife.style.transition = "";
+      }, 420);
+      return () => window.clearTimeout(tid);
+    }
+  }
+
+  useDraggable(
+    knifeRef,
+    () => (logRef.current ? [{ el: logRef.current, onDrop: handleCut }] : []),
+    !done && phase === "cutting",
+  );
 
   useEffect(() => {
-    if (count === 0) return;
+    if (count === 0) {
+      setMessage("칼을 빵 위로 끌어다 놓아봐! 🔪");
+      return;
+    }
     if (!done) {
-      setMessage(`슥슥~ ${count}/${step.target}`);
+      setMessage(`슥슥~ 한 번 더 자르자! ${count}/${step.target}`);
       return;
     }
     setMessage(`${slices}조각 완성! 🎉`);
-    const tSep = setTimeout(() => setPhase("separated"), 1000);
-    const tDone = setTimeout(onComplete, 2000);
+    const tSep = window.setTimeout(() => setPhase("separated"), 1000);
+    const tDone = window.setTimeout(onComplete, 2000);
     return () => {
-      clearTimeout(tSep);
-      clearTimeout(tDone);
+      window.clearTimeout(tSep);
+      window.clearTimeout(tDone);
     };
   }, [count, done, slices, step.target, setMessage, onComplete]);
-
-  function handle() {
-    setCount((p) => (p >= step.target ? p : p + 1));
-  }
 
   const logBg = `repeating-radial-gradient(circle,
     ${SPONGE_FILL} 0px,
@@ -38,13 +61,8 @@ export default function SliceStep({ step, recipe, onComplete, setMessage }: Step
     ${cream} 6px,
     ${cream} 10px)`;
 
-  // 본체 로그 너비: 자를수록 줄어들어 1 → (slices-1)/slices → ... → 1/slices
-  // 1em = 한 조각 크기, 전체 로그는 slices em
-  const remaining = slices - count;
-  const logWidthEm = remaining;
-
   return (
-    <div className={styles.sliceLayout} onClick={handle}>
+    <div className={styles.sliceLayout}>
       {phase === "separated" ? (
         <div className={styles.sliceRow}>
           {Array.from({ length: slices }).map((_, i) => (
@@ -57,9 +75,10 @@ export default function SliceStep({ step, recipe, onComplete, setMessage }: Step
         <div className={styles.sliceCuts}>
           {remaining > 0 && (
             <div
+              ref={logRef}
               className={styles.rollLogShrink}
               style={{
-                width: `${logWidthEm}em`,
+                width: `${remaining}em`,
                 background: logBg,
                 borderColor: SPONGE_EDGE,
               }}
@@ -72,7 +91,9 @@ export default function SliceStep({ step, recipe, onComplete, setMessage }: Step
           ))}
         </div>
       )}
-      <span className={styles.knife}>🔪</span>
+      {phase === "cutting" && (
+        <span ref={knifeRef} className={styles.knifeDraggable}>🔪</span>
+      )}
     </div>
   );
 }
