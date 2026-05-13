@@ -63,6 +63,9 @@ export default function SliceStep({ step, recipe, onComplete, setMessage }: Step
 
   return (
     <div className={styles.sliceLayout}>
+      {phase === "cutting" && (
+        <span ref={knifeRef} className={styles.knifeDraggable}>🔪</span>
+      )}
       {phase === "separated" ? (
         <div className={styles.sliceRow}>
           {Array.from({ length: slices }).map((_, i) => (
@@ -90,9 +93,6 @@ export default function SliceStep({ step, recipe, onComplete, setMessage }: Step
             </span>
           ))}
         </div>
-      )}
-      {phase === "cutting" && (
-        <span ref={knifeRef} className={styles.knifeDraggable}>🔪</span>
       )}
     </div>
   );

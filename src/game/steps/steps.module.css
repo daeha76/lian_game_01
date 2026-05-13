@@ -347,12 +347,13 @@
 
 /* === 자르기 (롤케익) === */
 .sliceLayout {
-  position: relative;
-  width: clamp(280px, 80vw, 360px);
-  height: clamp(180px, 44vw, 220px);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 18px;
+  width: clamp(280px, 80vw, 360px);
+  min-height: clamp(200px, 48vw, 240px);
   user-select: none;
   font-size: clamp(64px, 16vw, 84px);
 }
@@ -405,11 +406,8 @@
   animation: prepToolFloat 1.6s ease-in-out infinite;
 }
 .knifeDraggable {
-  position: absolute;
-  top: 8px;
-  right: 14px;
+  display: inline-block;
   font-size: clamp(52px, 13vw, 76px);
-  z-index: 3;
   cursor: grab;
   touch-action: none;
   user-select: none;
